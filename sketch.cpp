@@ -26,8 +26,9 @@
 /// ESTADOS DEL EMBEBIDO
 #define ESTADO_EMBED_INIT 100
 #define ESTADO_EMBED_IDLE 101
-#define ESTADO_EMBED_OPEN 102
-#define ESTADO_EMBED_MEASURING 103
+#define ESTADO_EMBED_OPEN_SERVING
+#define ESTADO_EMBED_CLOSED_MEASURING 102
+#define ESTADO_EMBED_SERVING 103
 
 /// ESTADOS DEL LED
 #define ESTADO_LED_APAGADO 100
@@ -45,12 +46,16 @@
 
 /// EVENTOS
 #define EVENTO_CONTINUE 1000
-#define EVENTO_PULSADOR_ACTIVADO 2000
+#define EVENTO_PESO_PORCION_FALTA 2000
+#define EVENTO_PESO_PORCION_COMPLETA 3000
+#define EVENTO_PESO_PORCION_INSUFICIENTE 4000
+#define EVENTO_PRESENCIA_DETECTADA 5000
 
 /// PINES
 #define PIN_PULSADOR 2
 #define PIN_LED 3
-#define PIN_SERVO 7
+#define PIN_SERVO_1 7
+#define PIN_SERVO_2 6
 #define PIN_FLEX A0
 #define PIN_DISTANCIA A1
 
@@ -58,7 +63,7 @@
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
 #define UMBRAL_LED_FAST_BLINK_TIMEOUT 1000 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 2500
-#define UMBRAL_PESO_MAXIMO 10
+#define UMBRAL_PESO_PORCION 1000
 
 
 // INCLUDES
@@ -79,7 +84,9 @@ typedef struct stLed {
   long ultima_lectura_millis; // Esto va a ser usado para hacer un blink rapido o lento.
   bool timeout;
 } stLed;
-
+typedef struct stPulsador {
+  int estado;
+} stPulsador;
 typedef int stEvento;
 typedef int stEstado;
 
@@ -88,8 +95,9 @@ stEvento evento;  // Objeto con el ultimo evento ocurrido
 volatile stEstado estado;  // Objeto estado con el estado actual del embebido
 stSensor sensor_distancia;
 stSensor sensor_flex;
+stPulsador pulsador;
 stLed led;
-bool timeout;  // Timeout para el ciclo de la maquina de estados
+bool timeout;  // Timeout para el ciclo de la maquina de estado
 long ultima_lectura_millis;
 Servo servo;  // Objeto servo para manejar Puerta.
 
@@ -105,11 +113,15 @@ void do_init() {
   servo.attach(PIN_SERVO);
   
   sensor_distancia.pin = PIN_DISTANCIA;
+  sensor_distancia.estado = ESTADO_DISTANCIA_AUSENTE;
+
   sensor_flex.pin = PIN_FLEX;
 
   led.pin = PIN_LED;
   led.estado = ESTADO_LED_APAGADO;
   pinMode(PIN_LED, OUTPUT);
+
+  pulsador.estado = ESTADO_BOTON_SUELTO;
 
   estado = ESTADO_EMBED_INIT;
 }
@@ -122,8 +134,46 @@ void loop() {
   maquina_estado();
 }
 
-void leer_sensores() {
+void detectar_eventos() {
+  switch (estado) {
+    case ESTADO_EMBED_IDLE:
+      {
+        if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION {
+          evento = EVENTO_PESO_PORCION_FALTA;
+          break;
+        }
 
+        if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
+          // chequear tiempo si puede servir ya
+          evento = EVENTO_PRESENCIA_DETECTADA;
+        }
+
+        if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
+
+        }
+
+        break;
+      }
+    case ESTADO_EMBED_OPEN_SERVING:
+      {
+        break;
+      }
+    case ESTADO_EMBED_OPEN_CLOSED_MEASURING:
+      {
+        break;
+      }
+    case ESTADO_EMBED_SERVING:
+      {
+        break;
+      }
+    default:
+      DebugPrint("No sensors to read");
+  }
+
+  // Si el pulsador fue presionado y no se proceso 
+  // lo ponemos como que fue suelto
+  pulsador.estado = ESTADO_BOTON_SUELTO;
+  
   //FLEX_VALUE = analogRead(FLEX_PIN);
   //Serial.println(FLEX_VALUE);
   //SERVO_POSITION = map(FLEX_VALUE, 770, 950, 0, 180);
@@ -135,6 +185,11 @@ void leer_sensores() {
   //if(evento_sensor_peso() || evento_sensor_distancia());
 }
 
+void leer_sensores() {
+  leer_sensor_distancia();
+  leer_sensor_peso();
+}
+
 void generar_evento() {
   long lectura_millis = millis();
   long diferencia = lectura_millis - ultima_lectura_millis;
@@ -144,8 +199,8 @@ void generar_evento() {
     timeout = false;
     ultima_lectura_millis = lectura_millis;
 
-    // Procesamiento de los eventos
-        
+    leer_sensores();
+    detectar_eventos();
   } else {    
     evento = EVENTO_CONTINUE;
   }
@@ -181,11 +236,17 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_CONTINUE");
               break;
             }
-          case EVENTO_PULSADOR_ACTIVADO:
+          case EVENTO_PESO_PORCION_FALTA:
             {
-              DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PULSADOR_ACTIVADO");
-              estado = ESTADO_EMBED_OPEN;
-              led.estado = ESTADO_LED_FAST_BLINK_APAGADO;
+              DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PESO_PORCION_FALTA");
+              led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;              
+              estado = ESTADO_EMBED_OPEN_SERVING;
+              break;
+            }
+          case EVENTO_PRESENCIA_DETECTADA:
+            {
+              DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PRESENCIA_DETECTADA");
+              estado = ESTADO_EMBED_SERVING;
               break;
             }
           default:
@@ -196,23 +257,33 @@ void maquina_estado() {
         }
         break;
       }
-    case ESTADO_EMBED_OPEN:
+    case ESTADO_EMBED_OPEN_SERVING:
       {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              DebugPrintEstado("ESTADO_EMBED_OPEN", "EVENTO_CONTINUE");
+              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
               break;   
-            }
-          case EVENTO_PULSADOR_ACTIVADO:
-            {
-              DebugPrintEstado("ESTADO_EMBED_OPEN", "EVENTO_PULSADOR_ACTIVADO");
-              evento = EVENTO_CONTINUE;
-              break;
             }
           default:
             {
-              DebugPrintEstado("ESTADO_EMBED_OPEN", "Evento desconocido");
+              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "Evento desconocido");
+              break;              
+            }
+        }
+        break;
+      }
+    case ESTADO_EMBED_CLOSED_MEASURING:
+      {
+        switch (evento) {
+          case EVENTO_CONTINUE:
+            {
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
+              break;   
+            }
+          default:
+            {
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "Evento desconocido");
               break;              
             }
         }
@@ -327,5 +398,5 @@ void manejar_led() {
 }
 
 void interrupt_pulsador() {
-  evento = EVENTO_PULSADOR_ACTIVADO;
+  pulsador.estado = ESTADO_BOTON_PRESIONADO;
 }
