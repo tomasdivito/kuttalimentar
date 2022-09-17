@@ -163,6 +163,7 @@ void detectar_eventos() {
           diferencia = (lectura_millis - ultima_lectura_millis_proceso);
           timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
           if (timeout_proceso) {
+            ultima_lectura_millis_proceso_puerta = lectura_millis;
             evento = EVENTO_PRESENCIA_DETECTADA;
             break;
           }
@@ -200,10 +201,18 @@ void detectar_eventos() {
           evento = EVENTO_PESO_PORCION_FALTA;
           break;
         }
+        evento = EVENTO_PESO_PORCION_COMPLETA;
         break;
       }
     case ESTADO_EMBED_SERVING:
       {
+        diferencia = (lectura_millis - ultima_lectura_millis_proceso_puerta);
+        timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+        if (timeout_proceso) {
+          evento = EVENTO_PORCION_SERVIDA;
+          break;
+        }
+        evento = EVENTO_CONTINUE;
         break;
       }
     default:
@@ -213,16 +222,6 @@ void detectar_eventos() {
   // Si el pulsador fue presionado y no se proceso 
   // lo ponemos como que fue suelto
   pulsador.estado = ESTADO_BOTON_SUELTO;
-  
-  //FLEX_VALUE = analogRead(FLEX_PIN);
-  //Serial.println(FLEX_VALUE);
-  //SERVO_POSITION = map(FLEX_VALUE, 770, 950, 0, 180);
-  //SERVO_POSITION = constrain(SERVO_POSITION, 0, 180);
-  //servo.write(SERVO_POSITION);
-
-  //DEPENDIENDO DEL ESTADO DEL EMBEBIDO PODRIAMOS LEER UNO U OTRO SENSOR
-  //if(leer_sensor_distancia();
-  //if(evento_sensor_peso() || evento_sensor_distancia());
 }
 
 void leer_sensores() {
@@ -329,6 +328,26 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
               break;   
             }
+          case EVENTO_PESO_PORCION_COMPLETA:
+            {
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_COMPLETA");
+              led.estado = ESTADO_LED_PRENDIDO;
+              estado = ESTADO_EMBED_IDLE;
+              break;
+            }
+          case EVENTO_PESO_PORCION_INSUFICIENTE:
+            {
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_INSUFICIENTE");
+              led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
+              estado = ESTADO_EMBED_INSUFICIENTE;
+              break;
+            }
+          case EVENTO_PESO_PORCION_FALTA:
+            {
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
+              estado = ESTADO_EMBED_OPEN_SERVING;
+              break;
+            }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "Evento desconocido");
@@ -343,6 +362,14 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
+              servo_puerta.write(SERVO_OPEN_POSITION);
+              break;   
+            }
+          case EVENTO_PORCION_SERVIDA:
+            {
+              DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_PORCION_SERVIDA");
+              servo_puerto.write(SERVO_CLOSED_POSITION);
+              estado = ESTADO_EMBED_IDLE;              
               break;   
             }
           default:
