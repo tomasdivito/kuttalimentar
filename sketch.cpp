@@ -29,6 +29,7 @@
 #define ESTADO_EMBED_OPEN_SERVING
 #define ESTADO_EMBED_CLOSED_MEASURING 102
 #define ESTADO_EMBED_SERVING 103
+#define ESTADO_EMBED_INSUFICIENTE 104
 
 /// ESTADOS DEL LED
 #define ESTADO_LED_APAGADO 100
@@ -50,6 +51,7 @@
 #define EVENTO_PESO_PORCION_COMPLETA 3000
 #define EVENTO_PESO_PORCION_INSUFICIENTE 4000
 #define EVENTO_PRESENCIA_DETECTADA 5000
+#define EVENTO_OPEN_SERVING_TIMEOUT 6000
 
 /// PINES
 #define PIN_PULSADOR 2
@@ -59,12 +61,16 @@
 #define PIN_FLEX A0
 #define PIN_DISTANCIA A1
 
+#define SERVO_OPEN_POSIION 90
+#define SERVO_CLOSED_POSITION 180
+
 /// UMBRALES
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
 #define UMBRAL_LED_FAST_BLINK_TIMEOUT 1000 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 2500
-#define UMBRAL_PESO_PORCION 1000
-
+#define UMBRAL_PESO_PORCION 1001
+#define UMBRAL_PROCESO_PORCION 3000
+#define UMBRAL_PROCESO_SERVING 4000
 
 // INCLUDES
 #include <Servo.h>
@@ -99,7 +105,11 @@ stPulsador pulsador;
 stLed led;
 bool timeout;  // Timeout para el ciclo de la maquina de estado
 long ultima_lectura_millis;
-Servo servo;  // Objeto servo para manejar Puerta.
+long ultima_lectura_millis_proceso_servir;
+long ultima_lectura_millis_proceso_porcion; // Ultima lectura para medir el timing de los servos.
+long ultima_lectura_millis_proceso_puerta;
+Servo servo_porcion;  // Objeto servo para manejar puerta de porcion.
+Servo servo_puerta;
 
 void do_init() {
   Serial.begin(9600);
@@ -110,7 +120,8 @@ void do_init() {
   pinMode(PIN_PULSADOR, INPUT);  
   attachInterrupt(digitalPinToInterrupt(PIN_PULSADOR), interrupt_pulsador, CHANGE);
 
-  servo.attach(PIN_SERVO);
+  servo_porcion.attach(PIN_SERVO_1);
+  servo_puerta.attach(PIN_SERVO_2);
   
   sensor_distancia.pin = PIN_DISTANCIA;
   sensor_distancia.estado = ESTADO_DISTANCIA_AUSENTE;
@@ -135,31 +146,60 @@ void loop() {
 }
 
 void detectar_eventos() {
+  long lectura_millis = millis();
+  int diferencia;
+  bool timeout_proceso = false;
+
   switch (estado) {
     case ESTADO_EMBED_IDLE:
       {
         if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION {
+          ultima_lectura_millis_proceso_porcion = lectura_millis;
           evento = EVENTO_PESO_PORCION_FALTA;
           break;
         }
 
         if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
-          // chequear tiempo si puede servir ya
-          evento = EVENTO_PRESENCIA_DETECTADA;
+          diferencia = (lectura_millis - ultima_lectura_millis_proceso);
+          timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+          if (timeout_proceso) {
+            evento = EVENTO_PRESENCIA_DETECTADA;
+            break;
+          }
         }
 
         if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
-
+          evento = EVENTO_PRESENCIA_DETECTADA;
+          break;
         }
 
+        evento = EVENTO_CONTINUE;
         break;
       }
     case ESTADO_EMBED_OPEN_SERVING:
       {
+        diferencia = (lectura_millis - ultima_lectura_millis_proceso_porcion);
+        timeout_proceso = (diferencia < UMBRAL_PROCESO_PORCION) ? (true) : (false);
+        if (timeout_proceso) {
+          evento = EVENTO_OPEN_SERVING_TIMEOUT;
+          break;
+        }
+
+        evento = EVENTO_CONTINUE;
         break;
       }
-    case ESTADO_EMBED_OPEN_CLOSED_MEASURING:
+    case ESTADO_EMBED_CLOSED_MEASURING:
       {
+        // TODO: ESTO NUNCA VA A PASAR!!! pero tenemos que ver si NO HAY CAMBIOS
+        if (sensor_flex.valor_previo == sensor_flex.valor_actual) {
+          evento = EVENTO_PESO_PORCION_INSUFICIENTE;
+          break;          
+        }
+        if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION {
+          ultima_lectura_millis_proceso_porcion = lectura_millis;
+          evento = EVENTO_PESO_PORCION_FALTA;
+          break;
+        }
         break;
       }
     case ESTADO_EMBED_SERVING:
@@ -180,8 +220,8 @@ void detectar_eventos() {
   //SERVO_POSITION = constrain(SERVO_POSITION, 0, 180);
   //servo.write(SERVO_POSITION);
 
-  /// DEPENDIENDO DEL ESTADO DEL EMBEBIDO PODRIAMOS LEER UNO U OTRO SENSOR
-  //   if(leer_sensor_distancia();
+  //DEPENDIENDO DEL ESTADO DEL EMBEBIDO PODRIAMOS LEER UNO U OTRO SENSOR
+  //if(leer_sensor_distancia();
   //if(evento_sensor_peso() || evento_sensor_distancia());
 }
 
@@ -239,7 +279,7 @@ void maquina_estado() {
           case EVENTO_PESO_PORCION_FALTA:
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PESO_PORCION_FALTA");
-              led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;              
+              led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_OPEN_SERVING;
               break;
             }
@@ -263,7 +303,15 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
+              servo_porcion.write(SERVO_OPEN_POSITION);
               break;   
+            }
+          case EVENTO_OPEN_SERVING_TIMEOUT:
+            {
+              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
+              servo_porcion.write(SERVO_CLOSED_POSITION);
+              estado = ESTADO_EMBED_CLOSED_MEASURING;
+              break;
             }
           default:
             {
@@ -288,6 +336,37 @@ void maquina_estado() {
             }
         }
         break;
+      }
+    case ESTADO_EMBED_SERVING:
+      {
+        switch (evento) {
+          case EVENTO_CONTINUE:
+            {
+              DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
+              break;   
+            }
+          default:
+            {
+              DebugPrintEstado("ESTADO_EMBED_SERVING", "Evento desconocido");
+              break;              
+            } 
+        }
+      }
+    case ESTADO_EMBED_INSUFICIENTE:
+      {
+        switch (evento) {
+          case EVENTO_CONTINUE:
+            {
+              DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
+              led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
+              break;   
+            }
+          default:
+            {
+              DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "Evento desconocido");
+              break;              
+            } 
+        }
       }
     default:
       {
