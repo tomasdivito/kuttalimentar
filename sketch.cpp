@@ -45,6 +45,10 @@
 #define ESTADO_BOTON_PRESIONADO 1
 #define ESTADO_BOTON_SUELTO 0
 
+/// ESTADOS DEL SERVO
+#define ESTADO_SERVO_ABIERTO 1
+#define ESTADO_SERVO_CERRADO 0
+
 /// EVENTOS
 #define EVENTO_CONTINUE 1000
 #define EVENTO_PESO_PORCION_FALTA 2000
@@ -69,10 +73,10 @@
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
 #define UMBRAL_LED_FAST_BLINK_TIMEOUT 100 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 500
-#define UMBRAL_PESO_PORCION 1023
+#define UMBRAL_PESO_PORCION 900
 #define UMBRAL_PRESENCIA_MAXIMA 100
-#define UMBRAL_PROCESO_PORCION 2000
-#define UMBRAL_PROCESO_SERVING 4000
+#define UMBRAL_PROCESO_PORCION 1500
+#define UMBRAL_PROCESO_SERVING 3000
 
 // INCLUDES
 #include <Servo.h>
@@ -82,8 +86,6 @@ typedef struct stSensor {
   int pin;
   long valor_actual;
   long valor_previo;
-
-  long ultima_lectura_millis;
 } stSensor;
 typedef struct stLed {
   int pin;
@@ -97,6 +99,10 @@ typedef struct stPulsador {
 } stPulsador;
 typedef int stEvento;
 typedef int stEstado;
+typedef struct stServo {
+  Servo servo;
+  int estado_servo;
+} stServo;
 
 /// VARIABLES GLOBALES
 stEvento evento;  // Objeto con el ultimo evento ocurrido
@@ -110,8 +116,8 @@ long ultima_lectura_millis;
 long ultima_lectura_millis_proceso_servir;
 long ultima_lectura_millis_proceso_porcion; // Ultima lectura para medir el timing de los servos.
 long ultima_lectura_millis_proceso_puerta;
-Servo servo_porcion;  // Objeto servo para manejar puerta de porcion.
-Servo servo_puerta;
+stServo servo_porcion;  // Objeto servo para manejar puerta de porcion.
+stServo servo_puerta;
 
 void do_init() {
   Serial.begin(9600);
@@ -122,8 +128,10 @@ void do_init() {
   pinMode(PIN_PULSADOR, INPUT);  
   attachInterrupt(digitalPinToInterrupt(PIN_PULSADOR), interrupt_pulsador, CHANGE);
 
-  servo_porcion.attach(PIN_SERVO_1);
-  servo_puerta.attach(PIN_SERVO_2);
+  servo_porcion.servo.attach(PIN_SERVO_1);
+  servo_puerta.servo.attach(PIN_SERVO_2);
+  servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
+  servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
   
   sensor_distancia.pin = PIN_DISTANCIA;
 
@@ -146,89 +154,109 @@ void loop() {
   maquina_estado();
 }
 
-void detectar_eventos() {
-  long lectura_millis = millis();
+bool detectar_eventos_flex(int lectura_millis) {
+  if (servo_puerta.estado_servo == ESTADO_SERVO_ABIERTO || servo_porcion.estado_servo == ESTADO_SERVO_ABIERTO) {
+    return false;
+  }
+
+  if (sensor_flex.valor_actual != sensor_flex.valor_previo) {
+    if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
+      ultima_lectura_millis_proceso_porcion = lectura_millis;
+      evento = EVENTO_PESO_PORCION_FALTA;
+      return true;
+    }
+
+    if (sensor_flex.valor_actual >= UMBRAL_PESO_PORCION) {
+      evento = EVENTO_PESO_PORCION_COMPLETA;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool detectar_eventos_distancia(int lectura_millis) {
+  bool timeout_proceso = false;
+  int diferencia;
+  if (servo_porcion.estado_servo == ESTADO_SERVO_ABIERTO || servo_puerta.estado_servo == ESTADO_SERVO_ABIERTO) {
+    return false;
+  }
+  if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
+    //diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
+    //timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+    //if (timeout_proceso) {
+      //ultima_lectura_millis_proceso_puerta = lectura_millis;
+      evento = EVENTO_PRESENCIA_DETECTADA;
+      return true;
+    //}
+  }
+
+  return false;
+}
+
+bool detectar_eventos_servo_porcion(int lectura_millis) {
+  bool timeout_proceso = false;
+  int diferencia;
+  if (servo_porcion.estado_servo == ESTADO_SERVO_ABIERTO) {
+    diferencia = (lectura_millis - ultima_lectura_millis_proceso_porcion);
+    timeout_proceso = (diferencia > UMBRAL_PROCESO_PORCION) ? (true) : (false);
+    if (timeout_proceso) {
+      evento = EVENTO_OPEN_SERVING_TIMEOUT;
+      return true;
+    }
+  }
+  return false;
+}
+
+bool detectar_eventos_servo_puerta(int lectura_millis) {
+  bool timeout_proceso = false;
+  int diferencia;
+  if (servo_puerta.estado_servo == ESTADO_SERVO_ABIERTO) {
+    diferencia = (lectura_millis - ultima_lectura_millis_proceso_puerta);
+    timeout_proceso = (diferencia > UMBRAL_PROCESO_SERVING) ? (true) : (false);
+    if (timeout_proceso) {
+      evento = EVENTO_PORCION_SERVIDA;
+      return true;
+    }
+  }
+  return false;
+}
+
+
+bool detectar_eventos(int lectura_millis) {
   int diferencia;
   bool timeout_proceso = false;
 
-  switch (estado) {
-    case ESTADO_EMBED_IDLE:
-      {
-        if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
-          ultima_lectura_millis_proceso_porcion = lectura_millis;
-          evento = EVENTO_PESO_PORCION_FALTA;
-          break;
-        }
-
-        if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
-          diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
-          timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
-          if (timeout_proceso) {
-            ultima_lectura_millis_proceso_puerta = lectura_millis;
-            evento = EVENTO_PRESENCIA_DETECTADA;
-            break;
-          }
-        }
-
-        if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
-          ultima_lectura_millis_proceso_puerta = lectura_millis;
-          evento = EVENTO_PRESENCIA_DETECTADA;
-          break;
-        }
-
-        evento = EVENTO_CONTINUE;
-        break;
-      }
-    case ESTADO_EMBED_OPEN_SERVING:
-      {
-        diferencia = (lectura_millis - ultima_lectura_millis_proceso_porcion);
-        timeout_proceso = (diferencia > UMBRAL_PROCESO_PORCION) ? (true) : (false);
-        if (timeout_proceso) {
-          evento = EVENTO_OPEN_SERVING_TIMEOUT;
-          break;
-        }
-
-        evento = EVENTO_CONTINUE;
-        break;
-      }
-    case ESTADO_EMBED_CLOSED_MEASURING:
-      {
-        // TODO: ESTO NUNCA VA A PASAR!!! pero tenemos que ver si NO HAY CAMBIOS
-        if (sensor_flex.valor_previo == sensor_flex.valor_actual) {
-          //evento = EVENTO_PESO_PORCION_INSUFICIENTE;
-          //break;          
-        }
-        if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
-          ultima_lectura_millis_proceso_porcion = lectura_millis;
-          evento = EVENTO_PESO_PORCION_FALTA;
-          break;
-        }
-        evento = EVENTO_PESO_PORCION_COMPLETA;
-        break;
-      }
-    case ESTADO_EMBED_SERVING:
-      {
-        diferencia = (lectura_millis - ultima_lectura_millis_proceso_puerta);
-        timeout_proceso = (diferencia > UMBRAL_PROCESO_SERVING) ? (true) : (false);
-        if (timeout_proceso) {
-          evento = EVENTO_PORCION_SERVIDA;
-          break;
-        }
-        evento = EVENTO_CONTINUE;
-        break;
-      }
-    default:
-      DebugPrint("No sensors to read");
+  if (detectar_eventos_flex(lectura_millis)) {
+    return true;
   }
 
-  // Si el pulsador fue presionado y no se proceso 
-  // lo ponemos como que fue suelto
+  if (detectar_eventos_distancia(lectura_millis)) {
+    return true;
+  }
+
+  if (detectar_eventos_servo_porcion(lectura_millis)) {
+    return true;
+  }
+
+  if (detectar_eventos_servo_puerta(lectura_millis)) {
+    return true;
+  }
+
+  if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
+    ultima_lectura_millis_proceso_puerta = lectura_millis;
+    pulsador.estado = ESTADO_BOTON_SUELTO;
+    evento = EVENTO_PRESENCIA_DETECTADA;
+    return true;
+  }
+
   pulsador.estado = ESTADO_BOTON_SUELTO;
+  return false;
 }
 
 void leer_sensores() {
-  //leer_sensor_distancia();
-  sensor_distancia.valor_actual = 3000;
+  leer_sensor_distancia();
+  //sensor_distancia.valor_actual = 3000;
   leer_sensor_peso();
 }
 
@@ -242,10 +270,12 @@ void generar_evento() {
     ultima_lectura_millis = lectura_millis;
 
     leer_sensores();
-    detectar_eventos();
-  } else {    
-    evento = EVENTO_CONTINUE;
+    if (detectar_eventos(lectura_millis)) {
+      return;
+    }
   }
+  
+  evento = EVENTO_CONTINUE;
 }
 
 void maquina_estado() {
@@ -258,8 +288,8 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_INIT", "ESTADO CONTINUE");
-              servo_puerta.write(SERVO_CLOSED_POSITION);
-              servo_porcion.write(SERVO_CLOSED_POSITION);
+              servo_puerta.servo.write(SERVO_CLOSED_POSITION);
+              servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               estado = ESTADO_EMBED_IDLE;
               led.estado = ESTADO_LED_PRENDIDO;              
               break;
@@ -290,6 +320,7 @@ void maquina_estado() {
           case EVENTO_PRESENCIA_DETECTADA:
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PRESENCIA_DETECTADA");
+              led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_SERVING;
               break;
             }
@@ -306,14 +337,16 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              //DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
-              servo_porcion.write(SERVO_OPEN_POSITION);
+              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
+              servo_porcion.servo.write(SERVO_OPEN_POSITION);
+              servo_porcion.estado_servo = ESTADO_SERVO_ABIERTO;
               break;   
             }
           case EVENTO_OPEN_SERVING_TIMEOUT:
             {
-              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
-              servo_porcion.write(SERVO_CLOSED_POSITION);
+              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_OPEN_SERVING_TIMEOUT");
+              servo_porcion.servo.write(SERVO_CLOSED_POSITION);
+              servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_CLOSED_MEASURING;
               break;
             }
@@ -330,7 +363,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              //DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
+              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
@@ -367,13 +400,15 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
-              servo_puerta.write(SERVO_OPEN_POSITION);
+              servo_puerta.servo.write(SERVO_OPEN_POSITION);
+              servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
               break;   
             }
           case EVENTO_PORCION_SERVIDA:
             {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_PORCION_SERVIDA");
-              servo_puerta.write(SERVO_CLOSED_POSITION);
+              servo_puerta.servo.write(SERVO_CLOSED_POSITION);
+              servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_IDLE;              
               break;   
             }
@@ -381,16 +416,16 @@ void maquina_estado() {
             {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "Evento desconocido");
               break;              
-            } 
+            }
         }
+        break;
       }
     case ESTADO_EMBED_INSUFICIENTE:
       {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              //DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
-              led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
+              DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
               break;   
             }
           default:
@@ -399,6 +434,7 @@ void maquina_estado() {
               break;              
             } 
         }
+        break;
       }
     default:
       {
@@ -412,19 +448,18 @@ void maquina_estado() {
 void leer_sensor_distancia() {
   long tiempo_pulso;
   long distancia;
-  int pinSensor = 0;
 
-  pinMode(pinSensor, OUTPUT);
-  digitalWrite(pinSensor, LOW);
+  pinMode(sensor_distancia.pin, OUTPUT);
+  digitalWrite(sensor_distancia.pin, LOW);
 
   delayMicroseconds(2);
-  digitalWrite(pinSensor, HIGH);
+  digitalWrite(sensor_distancia.pin, HIGH);
 
   delayMicroseconds(5);
-  digitalWrite(pinSensor, LOW);
+  digitalWrite(sensor_distancia.pin, LOW);
 
-  pinMode(pinSensor, INPUT);
-  tiempo_pulso = pulseIn(pinSensor, HIGH);
+  pinMode(sensor_distancia.pin, INPUT);
+  tiempo_pulso = pulseIn(sensor_distancia.pin, HIGH);
 
   // Convierto la medicion en centimetros.
   distancia = tiempo_pulso / 29 / 2;
