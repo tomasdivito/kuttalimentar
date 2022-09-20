@@ -1,5 +1,5 @@
 /// Habilitacion de debug para la impresion por el puerto serial
-#define SERIAL_DEBUG_ENABLED 0
+#define SERIAL_DEBUG_ENABLED 1
 
 #if SERIAL_DEBUG_ENABLED
 #define DebugPrint(str) \
@@ -62,16 +62,16 @@
 #define PIN_FLEX A0
 #define PIN_DISTANCIA A1
 
-#define SERVO_OPEN_POSITION 90
+#define SERVO_OPEN_POSITION 0
 #define SERVO_CLOSED_POSITION 180
 
 /// UMBRALES
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
-#define UMBRAL_LED_FAST_BLINK_TIMEOUT 1000 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
-#define UMBRAL_LED_SLOW_BLINK_TIMEOUT 2500
-#define UMBRAL_PESO_PORCION 1001
+#define UMBRAL_LED_FAST_BLINK_TIMEOUT 100 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
+#define UMBRAL_LED_SLOW_BLINK_TIMEOUT 500
+#define UMBRAL_PESO_PORCION 1023
 #define UMBRAL_PRESENCIA_MAXIMA 100
-#define UMBRAL_PROCESO_PORCION 3000
+#define UMBRAL_PROCESO_PORCION 2000
 #define UMBRAL_PROCESO_SERVING 4000
 
 // INCLUDES
@@ -171,6 +171,7 @@ void detectar_eventos() {
         }
 
         if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
+          ultima_lectura_millis_proceso_puerta = lectura_millis;
           evento = EVENTO_PRESENCIA_DETECTADA;
           break;
         }
@@ -181,7 +182,7 @@ void detectar_eventos() {
     case ESTADO_EMBED_OPEN_SERVING:
       {
         diferencia = (lectura_millis - ultima_lectura_millis_proceso_porcion);
-        timeout_proceso = (diferencia < UMBRAL_PROCESO_PORCION) ? (true) : (false);
+        timeout_proceso = (diferencia > UMBRAL_PROCESO_PORCION) ? (true) : (false);
         if (timeout_proceso) {
           evento = EVENTO_OPEN_SERVING_TIMEOUT;
           break;
@@ -194,8 +195,8 @@ void detectar_eventos() {
       {
         // TODO: ESTO NUNCA VA A PASAR!!! pero tenemos que ver si NO HAY CAMBIOS
         if (sensor_flex.valor_previo == sensor_flex.valor_actual) {
-          evento = EVENTO_PESO_PORCION_INSUFICIENTE;
-          break;          
+          //evento = EVENTO_PESO_PORCION_INSUFICIENTE;
+          //break;          
         }
         if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
           ultima_lectura_millis_proceso_porcion = lectura_millis;
@@ -208,7 +209,7 @@ void detectar_eventos() {
     case ESTADO_EMBED_SERVING:
       {
         diferencia = (lectura_millis - ultima_lectura_millis_proceso_puerta);
-        timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+        timeout_proceso = (diferencia > UMBRAL_PROCESO_SERVING) ? (true) : (false);
         if (timeout_proceso) {
           evento = EVENTO_PORCION_SERVIDA;
           break;
@@ -226,7 +227,8 @@ void detectar_eventos() {
 }
 
 void leer_sensores() {
-  leer_sensor_distancia();
+  //leer_sensor_distancia();
+  sensor_distancia.valor_actual = 3000;
   leer_sensor_peso();
 }
 
@@ -256,6 +258,8 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_INIT", "ESTADO CONTINUE");
+              servo_puerta.write(SERVO_CLOSED_POSITION);
+              servo_porcion.write(SERVO_CLOSED_POSITION);
               estado = ESTADO_EMBED_IDLE;
               led.estado = ESTADO_LED_PRENDIDO;              
               break;
@@ -302,7 +306,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
+              //DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
               servo_porcion.write(SERVO_OPEN_POSITION);
               break;   
             }
@@ -326,7 +330,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
+              //DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
@@ -385,7 +389,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
+              //DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               break;   
             }
@@ -477,7 +481,7 @@ void manejar_led() {
       {
         long lectura_millis = millis();
         long diferencia = lectura_millis - led.ultima_lectura_millis;
-        led.timeout = (diferencia > UMBRAL_LED_FAST_BLINK_TIMEOUT) ? (true) : (false);
+        led.timeout = (diferencia > UMBRAL_LED_SLOW_BLINK_TIMEOUT) ? (true) : (false);
         if (led.timeout) {
           led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
           led.ultima_lectura_millis = lectura_millis;
