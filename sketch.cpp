@@ -49,6 +49,10 @@
 #define ESTADO_SERVO_ABIERTO 1
 #define ESTADO_SERVO_CERRADO 0
 
+/// ESTADOS DEL FLEX
+#define ESTADO_FLEX_PORCION_SERVIDA 1
+#define ESTADO_FLEX_PORCION_FALTANTE 0
+
 /// EVENTOS
 #define EVENTO_CONTINUE 1000
 #define EVENTO_PESO_PORCION_FALTA 2000
@@ -86,6 +90,7 @@ typedef struct stSensor {
   int pin;
   long valor_actual;
   long valor_previo;
+  int estado;
 } stSensor;
 typedef struct stLed {
   int pin;
@@ -136,6 +141,7 @@ void do_init() {
   sensor_distancia.pin = PIN_DISTANCIA;
 
   sensor_flex.pin = PIN_FLEX;
+  sensor_flex.estado = ESTADO_FLEX_PORCION_FALTANTE; // todo repensarlo
 
   led.pin = PIN_LED;
   led.estado = ESTADO_LED_APAGADO;
@@ -159,17 +165,17 @@ bool detectar_eventos_flex(int lectura_millis) {
     return false;
   }
 
-  if (sensor_flex.valor_actual != sensor_flex.valor_previo) {
-    if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
-      ultima_lectura_millis_proceso_porcion = lectura_millis;
-      evento = EVENTO_PESO_PORCION_FALTA;
-      return true;
-    }
+  if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION) {
+    sensor_flex.estado = ESTADO_FLEX_PORCION_FALTANTE;
+    ultima_lectura_millis_proceso_porcion = lectura_millis;
+    evento = EVENTO_PESO_PORCION_FALTA;
+    return true;
+  }
 
-    if (sensor_flex.valor_actual >= UMBRAL_PESO_PORCION) {
-      evento = EVENTO_PESO_PORCION_COMPLETA;
-      return true;
-    }
+  if (sensor_flex.valor_actual >= UMBRAL_PESO_PORCION && sensor_flex.estado != ESTADO_FLEX_PORCION_SERVIDA) {
+    sensor_flex.estado = ESTADO_FLEX_PORCION_SERVIDA;
+    evento = EVENTO_PESO_PORCION_COMPLETA;
+    return true;
   }
 
   return false;
@@ -182,13 +188,15 @@ bool detectar_eventos_distancia(int lectura_millis) {
     return false;
   }
   if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
-    //diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
-    //timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
-    //if (timeout_proceso) {
-      //ultima_lectura_millis_proceso_puerta = lectura_millis;
+    // Chequeamos el timeout para el proceso de servir que se resetea una vez
+    // que se sirve la primera comida.
+    diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
+    timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+    if (timeout_proceso) {
+      ultima_lectura_millis_proceso_puerta = lectura_millis;
       evento = EVENTO_PRESENCIA_DETECTADA;
       return true;
-    //}
+    }
   }
 
   return false;
@@ -215,6 +223,9 @@ bool detectar_eventos_servo_puerta(int lectura_millis) {
     diferencia = (lectura_millis - ultima_lectura_millis_proceso_puerta);
     timeout_proceso = (diferencia > UMBRAL_PROCESO_SERVING) ? (true) : (false);
     if (timeout_proceso) {
+      // Cuando cerramos el servo de la puerta queremos esperar
+      // a que se cumpla el tiempo para poder volver a servir nuevamente.
+      ultima_lectura_millis_proceso_servir = lectura_millis;
       evento = EVENTO_PORCION_SERVIDA;
       return true;
     }
@@ -256,7 +267,6 @@ bool detectar_eventos(int lectura_millis) {
 
 void leer_sensores() {
   leer_sensor_distancia();
-  //sensor_distancia.valor_actual = 3000;
   leer_sensor_peso();
 }
 
