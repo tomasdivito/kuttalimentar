@@ -457,8 +457,6 @@ void maquina_estado() {
         DebugPrintEstado("ESTADO DESCONOCIDO", "");
       }
   }
-
-  manejar_led();
 }
 
 void leer_sensor_distancia() {
