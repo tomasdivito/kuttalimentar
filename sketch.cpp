@@ -301,7 +301,8 @@ void maquina_estado() {
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               estado = ESTADO_EMBED_IDLE;
-              led.estado = ESTADO_LED_PRENDIDO;              
+              led.estado = ESTADO_LED_PRENDIDO;
+              manejar_led();
               break;
             }
           default:
@@ -318,6 +319,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_CONTINUE");
+              manejar_led();
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -350,6 +352,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
               servo_porcion.servo.write(SERVO_OPEN_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_ABIERTO;
+              manejar_led();
               break;   
             }
           case EVENTO_OPEN_SERVING_TIMEOUT:
@@ -374,6 +377,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
+              manejar_led();
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
@@ -412,6 +416,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
               servo_puerta.servo.write(SERVO_OPEN_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
+              manejar_led();
               break;   
             }
           case EVENTO_PORCION_SERVIDA:
@@ -436,6 +441,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
+              manejar_led();
               break;   
             }
           default:
@@ -458,6 +464,8 @@ void maquina_estado() {
 void leer_sensor_distancia() {
   long tiempo_pulso;
   long distancia;
+  long velocidad_sonido = 29; // 1 cm cada 29 nanosegundos
+  long factor_distancia = 2; // Dividimos la distancia por 2 porque el ancho de pulso nos da el tiempo que tarda en ir y volver.
 
   pinMode(sensor_distancia.pin, OUTPUT);
   digitalWrite(sensor_distancia.pin, LOW);
@@ -469,10 +477,11 @@ void leer_sensor_distancia() {
   digitalWrite(sensor_distancia.pin, LOW);
 
   pinMode(sensor_distancia.pin, INPUT);
+  // dividimos el tiempo de pulso por dos porque 
   tiempo_pulso = pulseIn(sensor_distancia.pin, HIGH);
 
   // Convierto la medicion en centimetros.
-  distancia = tiempo_pulso / 29 / 2;
+  distancia = tiempo_pulso / velocidad_sonido / factor_distancia;
 
   sensor_distancia.valor_previo = sensor_distancia.valor_actual;
   sensor_distancia.valor_actual = distancia;
