@@ -32,14 +32,14 @@
 #define ESTADO_EMBED_INSUFICIENTE 105
 
 /// ESTADOS DEL LED
-#define ESTADO_LED_APAGADO 100
-#define ESTADO_LED_PRENDIDO 101
+#define ESTADO_LED_APAGADO 200
+#define ESTADO_LED_PRENDIDO 201
 
-#define ESTADO_LED_SLOW_BLINK_PRENDIDO 102
-#define ESTADO_LED_SLOW_BLINK_APAGADO 103
+#define ESTADO_LED_SLOW_BLINK_PRENDIDO 202
+#define ESTADO_LED_SLOW_BLINK_APAGADO 203
 
-#define ESTADO_LED_FAST_BLINK_PRENDIDO 104
-#define ESTADO_LED_FAST_BLINK_APAGADO 105
+#define ESTADO_LED_FAST_BLINK_PRENDIDO 204
+#define ESTADO_LED_FAST_BLINK_APAGADO 205
 
 /// ESTADOS DEL BOTON
 #define ESTADO_BOTON_PRESIONADO 1
@@ -302,7 +302,7 @@ void maquina_estado() {
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               estado = ESTADO_EMBED_IDLE;
               led.estado = ESTADO_LED_PRENDIDO;
-              manejar_led();
+              // manejar_led();
               break;
             }
           default:
@@ -319,7 +319,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_CONTINUE");
-              manejar_led();
+              // manejar_led();
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -349,10 +349,10 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              // manejar_led();
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
               servo_porcion.servo.write(SERVO_OPEN_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_ABIERTO;
-              manejar_led();
               break;   
             }
           case EVENTO_OPEN_SERVING_TIMEOUT:
@@ -377,7 +377,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
-              manejar_led();
+              // manejar_led();
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
@@ -416,7 +416,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
               servo_puerta.servo.write(SERVO_OPEN_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
-              manejar_led();
+              // manejar_led();
               break;   
             }
           case EVENTO_PORCION_SERVIDA:
@@ -441,7 +441,7 @@ void maquina_estado() {
           case EVENTO_CONTINUE:
             {
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
-              manejar_led();
+              // manejar_led();
               break;   
             }
           default:
@@ -457,6 +457,8 @@ void maquina_estado() {
         DebugPrintEstado("ESTADO DESCONOCIDO", "");
       }
   }
+
+  manejar_led();
 }
 
 void leer_sensor_distancia() {
@@ -491,7 +493,9 @@ void leer_sensor_peso() {
   sensor_flex.valor_actual = lectura;
 }
 
-void manejar_led() {
+void  manejar_led() {
+  Serial.print('\n');
+  Serial.print(led.estado);
   switch (led.estado) {
     case ESTADO_LED_APAGADO:
       {
