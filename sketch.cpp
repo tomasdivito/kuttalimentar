@@ -297,6 +297,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_INIT", "ESTADO CONTINUE");
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
@@ -306,6 +307,7 @@ void maquina_estado() {
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_INIT", "Evento desconocido");
               break;
             }
@@ -317,11 +319,13 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_CONTINUE");
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PESO_PORCION_FALTA");
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_OPEN_SERVING;
@@ -329,6 +333,7 @@ void maquina_estado() {
             }
           case EVENTO_PRESENCIA_DETECTADA:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PRESENCIA_DETECTADA");
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_SERVING;
@@ -336,6 +341,7 @@ void maquina_estado() {
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_IDLE", "Evento desconocido");
               break;
             }
@@ -347,6 +353,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_CONTINUE");
               servo_porcion.servo.write(SERVO_OPEN_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_ABIERTO;
@@ -354,6 +361,7 @@ void maquina_estado() {
             }
           case EVENTO_OPEN_SERVING_TIMEOUT:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "EVENTO_OPEN_SERVING_TIMEOUT");
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
@@ -362,6 +370,7 @@ void maquina_estado() {
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "Evento desconocido");
               break;              
             }
@@ -373,11 +382,13 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_COMPLETA");
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
@@ -385,6 +396,7 @@ void maquina_estado() {
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_INSUFICIENTE");
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_INSUFICIENTE;
@@ -392,12 +404,14 @@ void maquina_estado() {
             }
           case EVENTO_PESO_PORCION_FALTA:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
               estado = ESTADO_EMBED_OPEN_SERVING;
               break;
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "Evento desconocido");
               break;              
             }
@@ -409,6 +423,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_CONTINUE");
               servo_puerta.servo.write(SERVO_OPEN_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
@@ -416,6 +431,7 @@ void maquina_estado() {
             }
           case EVENTO_PORCION_SERVIDA:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_SERVING", "EVENTO_PORCION_SERVIDA");
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
@@ -424,6 +440,7 @@ void maquina_estado() {
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_SERVING", "Evento desconocido");
               break;              
             }
@@ -435,11 +452,13 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
               break;   
             }
           default:
             {
+              manejar_led();
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "Evento desconocido");
               break;              
             } 
@@ -448,11 +467,10 @@ void maquina_estado() {
       }
     default:
       {
+        manejar_led();
         DebugPrintEstado("ESTADO DESCONOCIDO", "");
       }
   }
-
-  manejar_led();
 }
 
 void leer_sensor_distancia() {
