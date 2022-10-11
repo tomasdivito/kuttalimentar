@@ -75,7 +75,7 @@
 
 /// UMBRALES
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
-#define UMBRAL_LED_FAST_BLINK_TIMEOUT 100 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
+#define UMBRAL_LED_FAST_BLINK_TIMEOUT 200 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 500
 #define UMBRAL_PESO_PORCION 900
 #define UMBRAL_PRESENCIA_MAXIMA 100
