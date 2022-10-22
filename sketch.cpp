@@ -84,6 +84,7 @@
 
 // INCLUDES
 #include <Servo.h>
+#include <SoftwareSerial.h>
 
 /// TIPOS
 typedef struct stSensor {
@@ -123,9 +124,11 @@ long ultima_lectura_millis_proceso_porcion; // Ultima lectura para medir el timi
 long ultima_lectura_millis_proceso_puerta;
 stServo servo_porcion;  // Objeto servo para manejar puerta de porcion.
 stServo servo_puerta;
+SoftwareSerial BTSerial(10,11); // Objeto software serial para el modulo bluetooth en los pines 10 y 11.
 
 void do_init() {
   Serial.begin(9600);
+  BTSerial.begin(9600);
 
   timeout = false;
   ultima_lectura_millis = millis();
@@ -254,7 +257,7 @@ bool detectar_eventos(int lectura_millis) {
     return true;
   }
 
-  if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
+  if (pulsador.estado == ESTADO_BOTON_PRESIONADO || leerBluetooth()) {
     ultima_lectura_millis_proceso_puerta = lectura_millis;
     pulsador.estado = ESTADO_BOTON_SUELTO;
     evento = EVENTO_PRESENCIA_DETECTADA;
@@ -263,6 +266,18 @@ bool detectar_eventos(int lectura_millis) {
 
   pulsador.estado = ESTADO_BOTON_SUELTO;
   return false;
+}
+
+int leerBluetooth(){
+  int returnValue = 0;
+  char inputBT = 'z';
+  if (Serial.available()) {
+    inputBT = Serial.read();
+  }
+  if(inputBT == 'a') {
+    returnValue = 1;
+  }
+  return returnValue;
 }
 
 void leer_sensores() {
@@ -390,6 +405,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
+              BTSerial.write("****** PORCION COMPLETA****** \n\n");
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -501,8 +517,6 @@ void leer_sensor_peso() {
 }
 
 void  manejar_led() {
-  Serial.print('\n');
-  Serial.print(led.estado);
   switch (led.estado) {
     case ESTADO_LED_APAGADO:
       {
