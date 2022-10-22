@@ -193,8 +193,9 @@ bool detectar_eventos_distancia(int lectura_millis) {
   if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
     // Chequeamos el timeout para el proceso de servir que se resetea una vez
     // que se sirve la primera comida.
-    diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
-    timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+    // diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
+    diferencia = 1;
+    timeout_proceso = (diferencia >= UMBRAL_PROCESO_SERVING) ? (true) : (false);
     if (timeout_proceso) {
       ultima_lectura_millis_proceso_puerta = lectura_millis;
       evento = EVENTO_PRESENCIA_DETECTADA;
@@ -257,7 +258,7 @@ bool detectar_eventos(int lectura_millis) {
     return true;
   }
 
-  if (pulsador.estado == ESTADO_BOTON_PRESIONADO || leerBluetooth()) {
+  if (pulsador.estado == ESTADO_BOTON_PRESIONADO || leerBluetooth()==1) {
     ultima_lectura_millis_proceso_puerta = lectura_millis;
     pulsador.estado = ESTADO_BOTON_SUELTO;
     evento = EVENTO_PRESENCIA_DETECTADA;
@@ -586,5 +587,6 @@ void  manejar_led() {
 }
 
 void interrupt_pulsador() {
+  Serial.println("INTERRUPCION");
   pulsador.estado = ESTADO_BOTON_PRESIONADO;
 }
