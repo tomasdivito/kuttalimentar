@@ -1,17 +1,27 @@
 package com.example.kutallimentapp;
 
-public class PresenterLogin implements Contract.PresenterLogin{
+import android.content.Intent;
 
-    private Contract.LoginActivity view
+public class PresenterLogin implements ContractLogin.PresenterLogin {
+
+    private ContractLogin.LoginView view;
+    private ContractLogin.LoginModel model;
+
+    public PresenterLogin(LoginActivity view, LoginModel model) {
+        this.view = view;
+        this.model = model;
+    }
 
     @Override
     public void onButtonClick() {
-
+        view.switchActivities();
     }
 
     @Override
     public void onDestroy() {
-        super.
+        view = null;
     }
+
+
 
 }

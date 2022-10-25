@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements Contract.View {
+public class MainActivity extends AppCompatActivity implements ContractMain.MainView {
 
     private TextView mensajeArduino;
     private Button botonServirComida;
 
-    Contract.PresenterMainActivity presenter;
+    ContractMain.PresenterMainActivity presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

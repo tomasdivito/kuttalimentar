@@ -1,6 +1,6 @@
 package com.example.kutallimentapp;
 
-public class ArduinoModel implements Contract.ArduinoModel {
+public class ArduinoModel implements ContractMain.ArduinoModel {
 
     @Override
     public void getArduinoMessage(final OnEventListener listener) {

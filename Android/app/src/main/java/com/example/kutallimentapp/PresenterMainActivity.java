@@ -1,12 +1,12 @@
 package com.example.kutallimentapp;
 
-public class PresenterMainActivity implements Contract.PresenterMainActivity, Contract.Model.OnEventListener {
+public class PresenterMainActivity implements ContractMain.PresenterMainActivity, ContractMain.ArduinoModel.OnEventListener {
 
-    private Contract.View mainView;
-    private Contract.Model model;
+    private ContractMain.MainView view;
+    private ContractMain.ArduinoModel model;
 
-    public PresenterMainActivity(Contract.View mainView, Contract.Model model) {
-        this.mainView = mainView;
+    public PresenterMainActivity(MainActivity view, ArduinoModel model) {
+        this.view = view;
         this.model = model;
     }
 
@@ -17,13 +17,13 @@ public class PresenterMainActivity implements Contract.PresenterMainActivity, Co
 
     @Override
     public void onDestroy() {
-        mainView = null;
+        view = null;
     }
 
     @Override
     public void onEvent(String string) {
-        if(mainView != null){
-            mainView.setString(string);
+        if(view != null){
+            view.setString(string);
         }
     }
 }
