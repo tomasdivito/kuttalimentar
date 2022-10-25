@@ -68,7 +68,8 @@
 #define PIN_SERVO_1 7
 #define PIN_SERVO_2 6
 #define PIN_FLEX A0
-#define PIN_DISTANCIA A1
+#define PIN_DISTANCIA_ECHO A1
+#define PIN_DISTANCIA_TRIGGER A2
 
 #define SERVO_OPEN_POSITION 0
 #define SERVO_CLOSED_POSITION 180
@@ -78,16 +79,19 @@
 #define UMBRAL_LED_FAST_BLINK_TIMEOUT 200 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 500
 #define UMBRAL_PESO_PORCION 900
-#define UMBRAL_PRESENCIA_MAXIMA 100
+#define UMBRAL_PRESENCIA_MAXIMA 10
 #define UMBRAL_PROCESO_PORCION 1500
-#define UMBRAL_PROCESO_SERVING 3000
+#define UMBRAL_PROCESO_SERVING 5000
 
 // INCLUDES
 #include <Servo.h>
+#include <SoftwareSerial.h>
 
 /// TIPOS
 typedef struct stSensor {
   int pin;
+  int pinEcho;
+  int pinTrigger;
   long valor_actual;
   long valor_previo;
   int estado;
@@ -123,9 +127,11 @@ long ultima_lectura_millis_proceso_porcion; // Ultima lectura para medir el timi
 long ultima_lectura_millis_proceso_puerta;
 stServo servo_porcion;  // Objeto servo para manejar puerta de porcion.
 stServo servo_puerta;
+SoftwareSerial BTSerial(10,11); // Objeto software serial para el modulo bluetooth en los pines 10 y 11.
 
 void do_init() {
   Serial.begin(9600);
+  BTSerial.begin(9600);
 
   timeout = false;
   ultima_lectura_millis = millis();
@@ -138,7 +144,8 @@ void do_init() {
   servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
   servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
   
-  sensor_distancia.pin = PIN_DISTANCIA;
+  sensor_distancia.pinTrigger = PIN_DISTANCIA_TRIGGER;
+  sensor_distancia.pinEcho = PIN_DISTANCIA_ECHO;
 
   sensor_flex.pin = PIN_FLEX;
   sensor_flex.estado = ESTADO_FLEX_PORCION_FALTANTE; // todo repensarlo
@@ -188,10 +195,13 @@ bool detectar_eventos_distancia(int lectura_millis) {
     return false;
   }
   if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
+    Serial.println("EN EL UMBRAL:\t");
+    Serial.println(sensor_distancia.valor_actual+'\n');
     // Chequeamos el timeout para el proceso de servir que se resetea una vez
     // que se sirve la primera comida.
-    diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
-    timeout_proceso = (diferencia < UMBRAL_PROCESO_SERVING) ? (true) : (false);
+     //diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
+    diferencia = 200000;
+    timeout_proceso = (diferencia >= UMBRAL_PROCESO_SERVING) ? (true) : (false);
     if (timeout_proceso) {
       ultima_lectura_millis_proceso_puerta = lectura_millis;
       evento = EVENTO_PRESENCIA_DETECTADA;
@@ -254,7 +264,7 @@ bool detectar_eventos(int lectura_millis) {
     return true;
   }
 
-  if (pulsador.estado == ESTADO_BOTON_PRESIONADO) {
+  if ((pulsador.estado == ESTADO_BOTON_PRESIONADO) || (leerBluetooth()==true)) {
     ultima_lectura_millis_proceso_puerta = lectura_millis;
     pulsador.estado = ESTADO_BOTON_SUELTO;
     evento = EVENTO_PRESENCIA_DETECTADA;
@@ -263,6 +273,22 @@ bool detectar_eventos(int lectura_millis) {
 
   pulsador.estado = ESTADO_BOTON_SUELTO;
   return false;
+}
+
+bool leerBluetooth()
+{
+  bool returnValue = false;
+  char inputBT = 'z';
+  if (BTSerial.available()) {
+    Serial.println("RECEIVING");
+    inputBT = BTSerial.read();
+    Serial.println(inputBT);
+  }
+  if(inputBT == 'a') {
+    Serial.println("READ");
+    returnValue = true;
+  }
+  return returnValue;
 }
 
 void leer_sensores() {
@@ -390,6 +416,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
+              BTSerial.write("****** PORCION COMPLETA****** \n\n");
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -474,24 +501,28 @@ void leer_sensor_distancia() {
   long velocidad_sonido = 29; // 1 cm cada 29 nanosegundos
   long factor_distancia = 2; // Dividimos la distancia por 2 porque el ancho de pulso nos da el tiempo que tarda en ir y volver.
 
-  pinMode(sensor_distancia.pin, OUTPUT);
-  digitalWrite(sensor_distancia.pin, LOW);
+  pinMode(sensor_distancia.pinTrigger, OUTPUT);
+  digitalWrite(sensor_distancia.pinTrigger, LOW);
 
   delayMicroseconds(2);
-  digitalWrite(sensor_distancia.pin, HIGH);
+  digitalWrite(sensor_distancia.pinTrigger, HIGH);
 
-  delayMicroseconds(5);
-  digitalWrite(sensor_distancia.pin, LOW);
+  delayMicroseconds(10);
+  digitalWrite(sensor_distancia.pinTrigger, LOW);
 
-  pinMode(sensor_distancia.pin, INPUT);
+  pinMode(sensor_distancia.pinEcho, INPUT);
   // dividimos el tiempo de pulso por dos porque 
-  tiempo_pulso = pulseIn(sensor_distancia.pin, HIGH);
+  tiempo_pulso = pulseIn(sensor_distancia.pinEcho, HIGH);
+  Serial.println("TIEMPO PULSO:\n");
+  Serial.println(tiempo_pulso);
 
   // Convierto la medicion en centimetros.
   distancia = tiempo_pulso / velocidad_sonido / factor_distancia;
 
   sensor_distancia.valor_previo = sensor_distancia.valor_actual;
   sensor_distancia.valor_actual = distancia;
+  Serial.println("DISTANCIA ACTUAL\n");
+  Serial.println(sensor_distancia.valor_actual);
 }
 
 void leer_sensor_peso() {
@@ -501,8 +532,6 @@ void leer_sensor_peso() {
 }
 
 void  manejar_led() {
-  Serial.print('\n');
-  Serial.print(led.estado);
   switch (led.estado) {
     case ESTADO_LED_APAGADO:
       {
