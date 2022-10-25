@@ -4,13 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements Contract.View {
 
     private TextView mensajeArduino;
     private Button botonServirComida;
 
-    Contract.Presenter presenter;
+    Contract.PresenterMainActivity presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +21,7 @@ public class MainActivity extends AppCompatActivity implements Contract.View {
 
         mensajeArduino = findViewById(R.id.mensajeArduino);
         botonServirComida = findViewById(R.id.botonServirComida);
-
-        presenter = new Presenter(this, new Model());
+        presenter = new PresenterMainActivity(this, new ArduinoModel());
 
         botonServirComida.setOnClickListener(new View.OnClickListener(){
             @Override

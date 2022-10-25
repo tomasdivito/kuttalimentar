@@ -6,15 +6,31 @@ public interface Contract {
         void setString(String string);
     }
 
-    interface Model {
+    interface ArduinoModel {
         interface OnEventListener {
             void onEvent(String string);
         }
-        void getNextName(Contract.Model.OnEventListener listener);
+        void getArduinoMessage(Contract.ArduinoModel.OnEventListener listener);
     }
 
-    interface Presenter {
+    interface PresenterMainActivity {
         void onButtonClick();
         void onDestroy();
+    }
+
+    interface LoginView {
+        void setString(String string);
+    }
+
+    interface PresenterLogin {
+        void onButtonClick();
+        void onDestroy();
+    }
+
+    interface LoginModel {
+        interface onEventListener {
+            void onEvent(String string);
+        }
+        void validatePassword(Contract.LoginModel.OnEventListener listener);
     }
 }
