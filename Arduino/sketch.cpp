@@ -78,8 +78,9 @@
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
 #define UMBRAL_LED_FAST_BLINK_TIMEOUT 200 // Estos numeros son grandes pero probablemente tengan que ser mucho mas chicos en el arduino normal
 #define UMBRAL_LED_SLOW_BLINK_TIMEOUT 500
-#define UMBRAL_PESO_PORCION 900
-#define UMBRAL_PRESENCIA_MAXIMA 10
+#define UMBRAL_PESO_PORCION 90
+#define UMBRAL_PRESENCIA_MAXIMA 20
+#define UMBRAL_PRESENCIA_MINIMA 1
 #define UMBRAL_PROCESO_PORCION 1500
 #define UMBRAL_PROCESO_SERVING 5000
 
@@ -194,13 +195,13 @@ bool detectar_eventos_distancia(int lectura_millis) {
   if (servo_porcion.estado_servo == ESTADO_SERVO_ABIERTO || servo_puerta.estado_servo == ESTADO_SERVO_ABIERTO) {
     return false;
   }
-  if (sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
+  if (sensor_distancia.valor_actual > UMBRAL_PRESENCIA_MINIMA && sensor_distancia.valor_actual < UMBRAL_PRESENCIA_MAXIMA) {
     Serial.println("EN EL UMBRAL:\t");
     Serial.println(sensor_distancia.valor_actual+'\n');
     // Chequeamos el timeout para el proceso de servir que se resetea una vez
     // que se sirve la primera comida.
-     //diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
-    diferencia = 200000;
+    diferencia = (lectura_millis - ultima_lectura_millis_proceso_servir);
+    //diferencia = 200000;
     timeout_proceso = (diferencia >= UMBRAL_PROCESO_SERVING) ? (true) : (false);
     if (timeout_proceso) {
       ultima_lectura_millis_proceso_puerta = lectura_millis;
