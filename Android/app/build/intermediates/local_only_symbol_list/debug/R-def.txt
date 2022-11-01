@@ -10,6 +10,7 @@ color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 id botonServirComida
+id editTextTextPassword
 id login_button
 id mensajeArduino
 layout activity_login

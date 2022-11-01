@@ -2679,6 +2679,7 @@ id easeIn
 id easeInOut
 id easeOut
 id east
+id editTextTextPassword
 id edit_query
 id elastic
 id end
