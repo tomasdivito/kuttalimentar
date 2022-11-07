@@ -1,5 +1,9 @@
 [
     {
+        "merged": "com.example.kutallimentapp-merged_res-25:/layout_activity_main.xml.flat",
+        "source": "com.example.kutallimentapp-main-27:/layout/activity_main.xml"
+    },
+    {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/xml_backup_rules.xml.flat",
         "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/xml/backup_rules.xml"
     },
@@ -62,10 +66,6 @@
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-xxxhdpi_ic_launcher.webp.flat",
         "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/mipmap-xxxhdpi/ic_launcher.webp"
-    },
-    {
-        "merged": "com.example.kutallimentapp-merged_res-25:/layout_activity_login.xml.flat",
-        "source": "com.example.kutallimentapp-main-27:/layout/activity_login.xml"
     },
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-xhdpi_ic_launcher_round.webp.flat",
