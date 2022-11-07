@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/activityMain">
 
     <Button
         android:id="@+id/botonServirComida"
@@ -31,4 +32,14 @@
         tools:layout_editor_absoluteX="97dp"
         tools:layout_editor_absoluteY="233dp"
         tools:text="@tools:sample/cities" />
+
+    <TextView
+        android:id="@+id/test"
+        android:layout_width="216dp"
+        android:layout_height="38dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="310dp"
+        android:text="" />
+
 </RelativeLayout>

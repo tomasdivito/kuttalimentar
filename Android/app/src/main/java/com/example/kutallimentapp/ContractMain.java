@@ -1,8 +1,12 @@
 package com.example.kutallimentapp;
 
+import android.hardware.SensorEvent;
+
 public interface ContractMain {
 
     interface MainView {
+        void onSensorChanged(SensorEvent event);
+
         void setString(String string);
     }
 

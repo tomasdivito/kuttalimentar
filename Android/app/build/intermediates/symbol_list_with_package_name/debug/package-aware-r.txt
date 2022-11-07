@@ -2575,6 +2575,7 @@ id action_mode_bar_stub
 id action_mode_close_button
 id action_text
 id actions
+id activityMain
 id activity_chooser_view_content
 id add
 id alertTitle
@@ -2927,6 +2928,7 @@ id tag_transition_group
 id tag_unhandled_key_event_manager
 id tag_unhandled_key_listeners
 id tag_window_insets_animation_callback
+id test
 id test_checkbox_android_button_tint
 id test_checkbox_app_button_tint
 id test_radiobutton_android_button_tint

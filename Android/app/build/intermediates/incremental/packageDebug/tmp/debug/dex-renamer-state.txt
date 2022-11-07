@@ -1,4 +1,4 @@
-#Tue Oct 25 17:55:03 ART 2022
+#Mon Nov 07 15:11:04 ART 2022
 base.2=C\:\\repos\\kuttalimentar\\Android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
 path.2=5/classes.dex
 base.1=C\:\\repos\\kuttalimentar\\Android\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
