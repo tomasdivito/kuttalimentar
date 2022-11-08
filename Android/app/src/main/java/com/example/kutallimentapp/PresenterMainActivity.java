@@ -4,10 +4,12 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
 
     private ContractMain.MainView view;
     private ContractMain.ArduinoModel model;
+    private ContractMain.SensorModel sensor;
 
-    public PresenterMainActivity(MainActivity view, ArduinoModel model) {
+    public PresenterMainActivity(MainActivity view, ArduinoModel model, ContractMain.SensorModel sensor) {
         this.view = view;
         this.model = model;
+        this.sensor = sensor;
     }
 
     @Override

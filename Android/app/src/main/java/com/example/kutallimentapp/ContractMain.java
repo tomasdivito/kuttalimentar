@@ -19,4 +19,7 @@ public interface ContractMain {
     }
 
 
+    public interface SensorModel {
+
+    }
 }

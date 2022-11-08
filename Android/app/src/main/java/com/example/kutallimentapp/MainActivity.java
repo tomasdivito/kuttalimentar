@@ -50,8 +50,11 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
+
+    SensorModel sensorModel;
     SensorManager sensorManager;
     Sensor sensor;
+
     SensorEventListener sensorEventListener;
     int whip = 0;
 
@@ -62,7 +65,39 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
         mensajeArduino = findViewById(R.id.mensajeArduino);
         botonServirComida = findViewById(R.id.botonServirComida);
-        presenter = new PresenterMainActivity(this, new ArduinoModel());
+
+        // Instancio el sensor.
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorModel = new SensorModel(sensorManager,new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                float x = sensorEvent.values[0];
+                System.out.println("Valor de giro" + x);
+                //movemos hacia la derecha
+                if (x < -5 && whip == 0) {
+                    getWindow().getDecorView().setBackgroundColor(Color.RED);
+                    whip++;
+                }
+                //movemos hacia la izquierda
+                else if (x > 5 && whip == 1) {
+                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
+                    whip++;
+                }
+
+                if (whip == 2) {
+                    whip = 0;
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+
+            }
+        });
+        //###########################################################################
+
+        presenter = new PresenterMainActivity(this, new ArduinoModel(), sensorModel);
 
         botonServirComida.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
                 presenter.onButtonClick();
             }
         });
-
 
         if (checkPermissions()) {
             enableComponent();
@@ -176,32 +210,6 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             finish();
         }
 
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float x = sensorEvent.values[0];
-                System.out.println("Valor de giro" + x);
-                //movemos hacia la derecha
-                if (x < -5 && whip == 0) {
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
-                    whip++;
-                }
-                //movemos hacia la izquierda
-                else if (x > 5 && whip == 1) {
-                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-                    whip++;
-                }
-
-                if (whip == 2) {
-                    whip = 0;
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
         start();
     }
 
