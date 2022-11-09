@@ -6,121 +6,121 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="26"
-8-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml
+8-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml
 9        android:targetSdkVersion="32" />
-9-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml
+9-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml
 10
 11    <!-- - Aca se indican los permisos que va a necesitar la aplicacion -->
 12    <uses-permission android:name="android.permission.BLUETOOTH" />
-12-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:7:5-68
-12-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:7:22-65
+12-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:7:5-68
+12-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:7:22-65
 13    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-13-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:8:5-74
-13-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:8:22-71
+13-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:8:5-74
+13-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:8:22-71
 14    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-14-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:9:5-76
-14-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:9:22-73
+14-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:9:5-76
+14-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:9:22-73
 15    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-15-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:10:5-81
-15-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:10:22-78
+15-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:10:5-81
+15-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:10:22-78
 16    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-16-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:11:5-81
-16-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:11:22-78
+16-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:11:5-81
+16-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:11:22-78
 17    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-17-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:12:5-75
-17-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:12:22-72
+17-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:12:5-75
+17-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:12:22-72
 18    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-18-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:13:5-80
-18-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:13:22-77
+18-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:13:5-80
+18-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:13:22-77
 19
 20    <application
-20-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:14:5-48:19
+20-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:14:5-48:19
 21        android:allowBackup="true"
-21-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:15:9-35
+21-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:15:9-35
 22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-22-->[androidx.core:core:1.7.0] /Users/tomasdivito/.gradle/caches/transforms-3/249713548fb8d92d9c56becf07cdffea/transformed/core-1.7.0/AndroidManifest.xml:24:18-86
+22-->[androidx.core:core:1.7.0] C:\Users\ldamici\.gradle\caches\transforms-3\249713548fb8d92d9c56becf07cdffea\transformed\core-1.7.0\AndroidManifest.xml:24:18-86
 23        android:dataExtractionRules="@xml/data_extraction_rules"
-23-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:16:9-65
+23-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:16:9-65
 24        android:debuggable="true"
 25        android:extractNativeLibs="false"
 26        android:fullBackupContent="@xml/backup_rules"
-26-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:17:9-54
+26-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:17:9-54
 27        android:icon="@mipmap/ic_launcher"
-27-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:18:9-43
+27-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:18:9-43
 28        android:label="@string/app_name"
-28-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:19:9-41
+28-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:19:9-41
 29        android:roundIcon="@mipmap/ic_launcher_round"
-29-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:20:9-54
+29-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:20:9-54
 30        android:supportsRtl="true"
-30-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:21:9-35
+30-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:21:9-35
 31        android:testOnly="true"
 32        android:theme="@style/Theme.KutallimentApp" >
-32-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:22:9-52
+32-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:22:9-52
 33        <activity
-33-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:24:9-34:20
+33-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:24:9-34:20
 34            android:name="com.example.kutallimentapp.MainActivity"
-34-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:25:13-41
+34-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:25:13-41
 35            android:exported="true" >
-35-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:26:13-36
+35-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:26:13-36
 36            <intent-filter>
-36-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:27:13-29:29
+36-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:27:13-29:29
 37                <action android:name="android.intent.action.MAIN" />
-37-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:17-69
-37-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:25-66
+37-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:28:17-69
+37-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:28:25-66
 38            </intent-filter>
 39
 40            <meta-data
-40-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:31:13-33:36
+40-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:31:13-33:36
 41                android:name="android.app.lib_name"
-41-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:32:17-52
+41-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:32:17-52
 42                android:value="" />
-42-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:33:17-33
+42-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:33:17-33
 43        </activity>
 44        <activity
-44-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:35:9-47:20
+44-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:35:9-47:20
 45            android:name="com.example.kutallimentapp.LoginActivity"
-45-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:36:13-42
+45-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:36:13-42
 46            android:exported="true" >
-46-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:37:13-36
+46-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:37:13-36
 47            <intent-filter>
-47-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:38:13-42:29
+47-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:38:13-42:29
 48                <action android:name="android.intent.action.MAIN" />
-48-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:17-69
-48-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:25-66
+48-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:28:17-69
+48-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:28:25-66
 49
 50                <category android:name="android.intent.category.LAUNCHER" />
-50-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:41:17-76
-50-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:41:27-74
+50-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:41:17-76
+50-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:41:27-74
 51            </intent-filter>
 52
 53            <meta-data
-53-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:31:13-33:36
+53-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:31:13-33:36
 54                android:name="android.app.lib_name"
-54-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:32:17-52
+54-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:32:17-52
 55                android:value="" />
-55-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:33:17-33
+55-->C:\Users\ldamici\OneDrive - ANDREANI LOGISTICA SA\Documentos\Facultad\SOA\kuttalimentar\Android\app\src\main\AndroidManifest.xml:33:17-33
 56        </activity>
 57
 58        <provider
-58-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+58-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
 59            android:name="androidx.startup.InitializationProvider"
-59-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:27:13-67
+59-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:27:13-67
 60            android:authorities="com.example.kutallimentapp.androidx-startup"
-60-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:28:13-68
+60-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:28:13-68
 61            android:exported="false" >
-61-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:29:13-37
+61-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:29:13-37
 62            <meta-data
-62-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+62-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
 63                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-63-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:32:17-75
+63-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:32:17-75
 64                android:value="androidx.startup" />
-64-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:33:17-49
+64-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ldamici\.gradle\caches\transforms-3\534a23b582687ff41a7186a04e3a238c\transformed\emoji2-1.0.0\AndroidManifest.xml:33:17-49
 65            <meta-data
-65-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
+65-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ldamici\.gradle\caches\transforms-3\0d1c36957947c0cced820087c8164150\transformed\lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
 66                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-66-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
+66-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ldamici\.gradle\caches\transforms-3\0d1c36957947c0cced820087c8164150\transformed\lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
 67                android:value="androidx.startup" />
-67-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
+67-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ldamici\.gradle\caches\transforms-3\0d1c36957947c0cced820087c8164150\transformed\lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
 68        </provider>
 69    </application>
 70
