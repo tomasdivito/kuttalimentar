@@ -1,5 +1,8 @@
 package com.example.kutallimentapp;
 
+import android.os.Handler;
+import android.os.Message;
+
 public class PresenterMainActivity implements ContractMain.PresenterMainActivity, ContractMain.ArduinoModel.OnEventListener {
 
     private ContractMain.MainView view;
@@ -12,12 +15,17 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
 
     @Override
     public void onButtonClick() {
-        model.getArduinoMessage(this);
+        model.openFood();
     }
 
     @Override
     public void onDestroy() {
         view = null;
+    }
+
+    @Override
+    public void connectBluetooth() {
+        model.connectBluetooth(this);
     }
 
     @Override

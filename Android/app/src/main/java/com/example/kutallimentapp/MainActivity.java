@@ -77,6 +77,15 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkPermissions()) {
+            enableComponent();
+        }
+    }
+
     //Metodo que chequea si estan habilitados los permisos
     private boolean checkPermissions() {
         int result;
@@ -135,8 +144,9 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        presenter.connectBluetooth();
         // Move this to the presenter/model
-        adapter = BluetoothAdapter.getDefaultAdapter();
+        /*adapter = BluetoothAdapter.getDefaultAdapter();
 
         String hc05Address = null;
         Log.d("Totii", "Hello");
@@ -169,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         } else {
             Log.d("", "Alimentador no encontrado :(");
         }
+        */
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -180,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float x = sensorEvent.values[0];
-                System.out.println("Valor de giro" + x);
+                //System.out.println("Valor de giro" + x);
                 //movemos hacia la derecha
                 if (x < -5 && whip == 0) {
                     getWindow().getDecorView().setBackgroundColor(Color.RED);
@@ -223,6 +234,11 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
     @Override
     public void setString(String string) {
         mensajeArduino.setText(string);
+    }
+
+    @Override
+    public void onBluetoothStatusChange(String status) {
+        mensajeArduino.setText(status);
     }
 
     @Override
