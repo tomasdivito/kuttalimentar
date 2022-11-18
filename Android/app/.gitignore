@@ -32,6 +32,9 @@ build/
 captures/
 output.json
 
+Android/app/build
+Android/app/build/intermediates
+
 #NDK
 obj/
 .externalNativeBuild
