@@ -7,6 +7,8 @@ color purple_700
 color teal_200
 color teal_700
 color white
+drawable fondo
+drawable fondo1
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 id botonServirComida

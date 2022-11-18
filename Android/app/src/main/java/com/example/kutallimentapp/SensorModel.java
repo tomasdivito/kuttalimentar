@@ -17,6 +17,20 @@ public class SensorModel implements ContractMain.SensorModel{
         this.sensorManager = sensorManager;
         this.sensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         this.sensorEventListener = sensorEventListener;
+        start();
+    }
+
+    private void start() {
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void stop() {
+        sensorManager.unregisterListener(sensorEventListener);
+    }
+
+    @Override
+    public void pause(){
+        stop();
     }
 
 }

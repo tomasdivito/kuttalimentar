@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         // Instancio el sensor.
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (sensor == null) {
+            finish();
+        }
         sensorModel = new SensorModel(sensorManager,new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
@@ -203,24 +206,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         } else {
             Log.d("", "Alimentador no encontrado :(");
         }
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        if (sensor == null) {
-            finish();
-        }
-
-        start();
     }
-
-    private void start() {
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void stop() {
-        sensorManager.unregisterListener(sensorEventListener);
-    }
-
 
     @Override
     protected void onDestroy() {
@@ -235,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
     @Override
     protected void onPause() {
-        stop();
+        presenter.pause();
         super.onPause();
     }
 }

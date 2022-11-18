@@ -28,4 +28,9 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
             view.setString(string);
         }
     }
+
+    @Override
+    public void pause(){
+        sensor.pause();
+    }
 }

@@ -16,10 +16,11 @@ public interface ContractMain {
     interface PresenterMainActivity {
         void onButtonClick();
         void onDestroy();
+        void pause();
     }
 
 
     public interface SensorModel {
-
+        void pause();
     }
 }
