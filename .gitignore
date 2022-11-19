@@ -1,0 +1,7 @@
+
+Android/app/build/
+Android/.gradle/
+Android/.idea/
+*.bin
+*.txt
+*.apk

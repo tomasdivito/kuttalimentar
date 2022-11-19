@@ -22,7 +22,12 @@ public interface ContractMain {
         void onButtonClick();
         void onDestroy();
         void connectBluetooth();
+
+        void pause();
     }
 
 
+    public interface SensorModel {
+        void pause();
+    }
 }

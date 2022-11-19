@@ -1,16 +1,15 @@
 package com.example.kutallimentapp;
 
-import android.os.Handler;
-import android.os.Message;
-
 public class PresenterMainActivity implements ContractMain.PresenterMainActivity, ContractMain.ArduinoModel.OnEventListener {
 
     private ContractMain.MainView view;
     private ContractMain.ArduinoModel model;
+    private ContractMain.SensorModel sensor;
 
-    public PresenterMainActivity(MainActivity view, ArduinoModel model) {
+    public PresenterMainActivity(MainActivity view, ArduinoModel model, ContractMain.SensorModel sensor) {
         this.view = view;
         this.model = model;
+        this.sensor = sensor;
     }
 
     @Override
@@ -33,5 +32,10 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
         if(view != null){
             view.setString(string);
         }
+    }
+
+    @Override
+    public void pause(){
+        sensor.pause();
     }
 }

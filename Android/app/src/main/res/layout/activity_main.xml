@@ -6,11 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
@@ -32,12 +27,18 @@
 
         <Button
             android:id="@+id/botonServirComida"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="507dp"
+            android:layout_marginTop="600dp"
             android:text="Servir Comida"
             tools:layout_editor_absoluteX="129dp"
-            tools:layout_editor_absoluteY="564dp" />
-    </LinearLayout>
+            tools:layout_editor_absoluteY="564dp"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fondo3" />
 
 </RelativeLayout>
