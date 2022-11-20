@@ -426,7 +426,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_INSUFICIENTE;
-              BTSerial.write("S");
+              BTSerial.write("I");
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
