@@ -355,7 +355,7 @@ void maquina_estado() {
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
               estado = ESTADO_EMBED_OPEN_SERVING;
-              BTSerial.write(EVENTO_PESO_PORCION_FALTA);
+              BTSerial.write("EVENTO_PESO_PORCION_FALTA");
               break;
             }
           case EVENTO_PRESENCIA_DETECTADA:
@@ -364,7 +364,7 @@ void maquina_estado() {
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
               estado = ESTADO_EMBED_SERVING;
-              BTSerial.write(EVENTO_PRESENCIA_DETECTADA);
+              BTSerial.write("EVENTO_PRESENCIA_DETECTADA");
               break;
             }
           default:
@@ -394,7 +394,7 @@ void maquina_estado() {
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_CLOSED_MEASURING;
-              BTSerial.write(EVENTO_OPEN_SERVING_TIMEOUT);
+              BTSerial.write("EVENTO_OPEN_SERVING_TIMEOUT");
               break;
             }
           default:
@@ -420,7 +420,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
-              BTSerial.write(EVENTO_PESO_PORCION_COMPLETA);
+              BTSerial.write("EVENTO_PESO_PORCION_COMPLETA");
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -429,7 +429,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_INSUFICIENTE;
-              BTSerial.write(EVENTO_PESO_PORCION_INSUFICIENTE);
+              BTSerial.write("EVENTO_PESO_PORCION_INSUFICIENTE");
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -437,7 +437,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
               manejar_led();
               estado = ESTADO_EMBED_OPEN_SERVING;
-              BTSerial.write(EVENTO_PESO_PORCION_FALTA);
+              BTSerial.write("EVENTO_PESO_PORCION_FALTA");
               break;
             }
           default:
@@ -467,7 +467,7 @@ void maquina_estado() {
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_IDLE;              
-              BTSerial.write(EVENTO_PORCION_SERVIDA);
+              BTSerial.write("EVENTO_PORCION_SERVIDA");
               break;   
             }
           default:
