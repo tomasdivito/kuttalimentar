@@ -30,12 +30,13 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
     @Override
     public void onEvent(String string) {
         if(view != null){
-            view.setString(string);
+            view.updateArduinoState(string);
         }
     }
 
     @Override
     public void pause(){
+        this.model.disconnect(this);
         sensor.pause();
     }
 }

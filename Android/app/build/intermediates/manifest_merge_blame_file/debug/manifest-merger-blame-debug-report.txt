@@ -34,7 +34,7 @@
 18-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:13:22-77
 19
 20    <application
-20-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:14:5-48:19
+20-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:14:5-45:19
 21        android:allowBackup="true"
 21-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:15:9-35
 22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -45,83 +45,76 @@
 25        android:extractNativeLibs="false"
 26        android:fullBackupContent="@xml/backup_rules"
 26-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:17:9-54
-27        android:icon="@mipmap/ic_launcher"
-27-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:18:9-43
+27        android:icon="@drawable/fondo3"
+27-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:18:9-40
 28        android:label="@string/app_name"
 28-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:19:9-41
-29        android:roundIcon="@mipmap/ic_launcher_round"
-29-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:20:9-54
+29        android:roundIcon="@drawable/fondo3"
+29-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:20:9-45
 30        android:supportsRtl="true"
 30-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:21:9-35
 31        android:testOnly="true"
 32        android:theme="@style/Theme.KutallimentApp" >
 32-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:22:9-52
 33        <activity
-33-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:24:9-34:20
+33-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:24:9-31:20
 34            android:name="com.example.kutallimentapp.MainActivity"
 34-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:25:13-41
 35            android:exported="true" >
 35-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:26:13-36
-36            <intent-filter>
-36-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:27:13-29:29
-37                <action android:name="android.intent.action.MAIN" />
-37-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:17-69
-37-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:25-66
-38            </intent-filter>
-39
-40            <meta-data
-40-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:31:13-33:36
-41                android:name="android.app.lib_name"
-41-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:32:17-52
-42                android:value="" />
-42-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:33:17-33
-43        </activity>
-44        <activity
-44-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:35:9-47:20
-45            android:name="com.example.kutallimentapp.LoginActivity"
-45-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:36:13-42
-46            android:exported="true" >
-46-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:37:13-36
-47            <intent-filter>
-47-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:38:13-42:29
-48                <action android:name="android.intent.action.MAIN" />
-48-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:17-69
-48-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:25-66
-49
-50                <category android:name="android.intent.category.LAUNCHER" />
-50-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:41:17-76
-50-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:41:27-74
-51            </intent-filter>
-52
-53            <meta-data
-53-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:31:13-33:36
-54                android:name="android.app.lib_name"
-54-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:32:17-52
-55                android:value="" />
-55-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:33:17-33
-56        </activity>
-57
-58        <provider
-58-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
-59            android:name="androidx.startup.InitializationProvider"
-59-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:27:13-67
-60            android:authorities="com.example.kutallimentapp.androidx-startup"
-60-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:28:13-68
-61            android:exported="false" >
-61-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:29:13-37
-62            <meta-data
-62-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
-63                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-63-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:32:17-75
-64                android:value="androidx.startup" />
-64-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:33:17-49
-65            <meta-data
-65-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
-66                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-66-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
-67                android:value="androidx.startup" />
-67-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
-68        </provider>
-69    </application>
-70
-71</manifest>
+36            <meta-data
+36-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:13-30:36
+37                android:name="android.app.lib_name"
+37-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:29:17-52
+38                android:value="" />
+38-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:30:17-33
+39        </activity>
+40        <activity
+40-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:32:9-44:20
+41            android:name="com.example.kutallimentapp.LoginActivity"
+41-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:33:13-42
+42            android:exported="true" >
+42-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:34:13-36
+43            <intent-filter>
+43-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:35:13-39:29
+44                <action android:name="android.intent.action.MAIN" />
+44-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:37:17-69
+44-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:37:25-66
+45
+46                <category android:name="android.intent.category.LAUNCHER" />
+46-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:38:17-76
+46-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:38:27-74
+47            </intent-filter>
+48
+49            <meta-data
+49-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:28:13-30:36
+50                android:name="android.app.lib_name"
+50-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:29:17-52
+51                android:value="" />
+51-->/Users/tomasdivito/code/kuttalimentar/Android/app/src/main/AndroidManifest.xml:30:17-33
+52        </activity>
+53
+54        <provider
+54-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+55            android:name="androidx.startup.InitializationProvider"
+55-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:27:13-67
+56            android:authorities="com.example.kutallimentapp.androidx-startup"
+56-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:28:13-68
+57            android:exported="false" >
+57-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:29:13-37
+58            <meta-data
+58-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+59                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+59-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:32:17-75
+60                android:value="androidx.startup" />
+60-->[androidx.emoji2:emoji2:1.0.0] /Users/tomasdivito/.gradle/caches/transforms-3/534a23b582687ff41a7186a04e3a238c/transformed/emoji2-1.0.0/AndroidManifest.xml:33:17-49
+61            <meta-data
+61-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:31:13-33:52
+62                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+62-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:32:17-78
+63                android:value="androidx.startup" />
+63-->[androidx.lifecycle:lifecycle-process:2.4.0] /Users/tomasdivito/.gradle/caches/transforms-3/0d1c36957947c0cced820087c8164150/transformed/lifecycle-process-2.4.0/AndroidManifest.xml:33:17-49
+64        </provider>
+65    </application>
+66
+67</manifest>

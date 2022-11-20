@@ -9,8 +9,6 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputEditText;
-
 public class LoginActivity extends AppCompatActivity implements ContractLogin.LoginView {
 
     Button loginButton;

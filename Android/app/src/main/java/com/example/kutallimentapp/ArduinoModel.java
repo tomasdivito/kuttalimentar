@@ -4,11 +4,13 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import java.io.IOException;
@@ -20,11 +22,17 @@ import java.util.UUID;
 public class ArduinoModel implements ContractMain.ArduinoModel {
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    private Handler handler;
-    BluetoothThread btThread;
-    OnEventListener eventListener;
+    private static final int MSG_BT = 4;
+    private static final int MSG_CLOSE = 5;
 
-    public ArduinoModel() {
+    private Handler handler;
+    private Context context;
+    private BluetoothThread btThread;
+    private ContractMain.ArduinoModel.OnEventListener eventListener;
+    private BluetoothSocket arduinoSocket;
+
+    public ArduinoModel(AppCompatActivity activity) {
+        this.context = activity;
         handler = Handler_Msg_Principal();
     }
 
@@ -32,10 +40,14 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
         return new Handler() {
             public void handleMessage(Message msg) {
                 //si se recibio un msj del hilo secundario
-                if (msg.what == 4) {
+                if (msg.what == MSG_BT) {
                     //voy concatenando el msj
                     String readMessage = (String) msg.obj;
                     eventListener.onEvent(readMessage);
+                }
+
+                if (msg.what == MSG_CLOSE) {
+                    eventListener.onEvent("Desconectado");
                 }
             }
         };
@@ -44,42 +56,49 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
     @Override
     public void openFood() {
         if (btThread != null) {
-            try {
-                btThread.write("a");
-            } catch (IOException exception) {
-                Log.e("bt", "error al mandar mensaje");
-            }
+            btThread.write("a");
         }
     }
 
     @Override
-    public void connectBluetooth(OnEventListener listener) {
+    public void connectBluetooth(ContractMain.ArduinoModel.OnEventListener listener) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        // Presenter as the event listener
         eventListener = listener;
+
+        if (arduinoSocket != null) {
+            try {
+                arduinoSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         BluetoothDevice hc05 = null;
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> pairedDevices = adapter.getBondedDevices();
+
         if (pairedDevices.size() > 0) {
-            Log.d("","Found " + pairedDevices.size() + " Devices");
             for (BluetoothDevice device : pairedDevices) {
                 if (device.getAddress().equals("00:21:11:01:B9:E9")) {
                     hc05 = device;
-                    Log.d("", "found");
                 }
-                Log.d("",device.getName() + "\n" + device.getAddress() + "\n" + device.getBondState());
             }
         } else {
             eventListener.onEvent("No devices found");
-            Log.d("","No devices found");
+            return;
         }
 
         if (hc05 != null) {
             eventListener.onEvent("Alimentador encontrado");
-            Log.d("Log", "Alimentador encontrado!");
             try {
-                BluetoothSocket socket = hc05.createInsecureRfcommSocketToServiceRecord(BTMODULEUUID);
+                arduinoSocket = hc05.createInsecureRfcommSocketToServiceRecord(BTMODULEUUID);
 
                 try {
-                    socket.connect();
+                    arduinoSocket.connect();
                 } catch (IOException e) {
                     e.printStackTrace();
                     eventListener.onEvent("Error al conectarse con el alimentador");
@@ -87,7 +106,7 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 }
 
                 // bluetooth encontrado creo socket
-                btThread = new BluetoothThread(socket);
+                btThread = new BluetoothThread(arduinoSocket);
 
                 btThread.start();
 
@@ -101,17 +120,22 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
     }
 
     @Override
-    public void getArduinoMessage(final OnEventListener listener) {
-        listener.onEvent(getMessage());
-    }
-
-    private String getMessage() {
-        return "Comida servida!";
+    public void disconnect(final ContractMain.ArduinoModel.OnEventListener eventListener) {
+        if (arduinoSocket == null) {
+            return;
+        }
+        try {
+            arduinoSocket.close();
+            btThread.stopThread();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public class BluetoothThread extends Thread {
         private InputStream inputStream;
         private OutputStream outputStream;
+        private boolean running;
 
         public BluetoothThread(BluetoothSocket socket) throws IOException {
             this.inputStream = socket.getInputStream();
@@ -122,8 +146,9 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
         public void run() {
             byte[] buffer = new byte[256];
             int bytes;
+            running = true;
 
-            while (true) {
+            while (running) {
                 try {
                     bytes = inputStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
@@ -133,15 +158,36 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                     msg.obj = readMessage;
                     handler.sendMessage(msg);
                 } catch (IOException e) {
+
+                    // Send close message to the handler
+                    Message msg = Message.obtain();
+                    msg.what = MSG_CLOSE;
+                    handler.sendMessage(msg);
+
+                    e.printStackTrace();
                     break;
                 }
             }
         }
 
-        public void write(String content) throws IOException {
+        public void write(String content) {
             byte[] buffer = content.getBytes();
-            outputStream.write(buffer);
+            try {
+                outputStream.write(buffer);
+            } catch (IOException e) {
+                running = false;
+
+                // Send close message to the handler
+                Message msg = Message.obtain();
+                msg.what = MSG_CLOSE;
+                handler.sendMessage(msg);
+
+                e.printStackTrace();
+            }
         }
 
+        synchronized public void stopThread() {
+            running = false;
+        }
     }
 }
