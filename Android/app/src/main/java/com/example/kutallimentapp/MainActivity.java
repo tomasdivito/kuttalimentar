@@ -74,16 +74,18 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float x = sensorEvent.values[0];
+                float y = sensorEvent.values[1];
                 dogImage.setRotationX(x);
+                dogImage.setRotationY(y);
                 System.out.println("Valor de giro" + x);
                 //movemos hacia la derecha
                 if (x < -5 && whip == 0) {
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
+                    //getWindow().getDecorView().setBackgroundColor(Color.RED);
                     whip++;
                 }
                 //movemos hacia la izquierda
                 else if (x > 5 && whip == 1) {
-                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
+                    //getWindow().getDecorView().setBackgroundColor(Color.BLUE);
                     whip++;
                 }
 
