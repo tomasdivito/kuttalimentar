@@ -330,13 +330,11 @@ void maquina_estado() {
               estado = ESTADO_EMBED_IDLE;
               led.estado = ESTADO_LED_PRENDIDO;
               manejar_led();
-              BTSerial.write("ESTADO_EMBED_INIT;EVENTO_CONTINUE");
               break;
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_INIT", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_INIT;EVENTO_DESCONOCIDO");
               break;
             }
         }
@@ -349,7 +347,6 @@ void maquina_estado() {
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_CONTINUE");
               manejar_led();
-              BTSerial.write("ESTADO_EMBED_IDLE;EVENTO_CONTINUE");
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -358,7 +355,7 @@ void maquina_estado() {
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
               estado = ESTADO_EMBED_OPEN_SERVING;
-              BTSerial.write("ESTADO_EMBED_IDLE;EVENTO_PESO_PORCION_FALTA");
+              BTSerial.write(EVENTO_PESO_PORCION_FALTA);
               break;
             }
           case EVENTO_PRESENCIA_DETECTADA:
@@ -367,13 +364,12 @@ void maquina_estado() {
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
               estado = ESTADO_EMBED_SERVING;
-              BTSerial.write("ESTADO_EMBED_IDLE;EVENTO_PRESENCIA_DETECTADA");
+              BTSerial.write(EVENTO_PRESENCIA_DETECTADA);
               break;
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_IDLE;EVENTO_DESCONOCIDO");
               break;
             }
         }
@@ -389,7 +385,6 @@ void maquina_estado() {
               manejar_led();
               servo_porcion.servo.write(SERVO_OPEN_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_ABIERTO;
-              BTSerial.write("ESTADO_EMBED_OPEN_SERVING;EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_OPEN_SERVING_TIMEOUT:
@@ -399,13 +394,12 @@ void maquina_estado() {
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_CLOSED_MEASURING;
-              BTSerial.write("ESTADO_EMBED_OPEN_SERVING;EVENTO_OPEN_SERVING_TIMEOUT");
+              BTSerial.write(EVENTO_OPEN_SERVING_TIMEOUT);
               break;
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_OPEN_SERVING", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_OPEN_SERVING;EVENTO_DESCONOCIDO");
               break;              
             }
         }
@@ -418,7 +412,6 @@ void maquina_estado() {
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_CONTINUE");
               manejar_led();
-              BTSerial.write("ESTADO_EMBED_CLOSED_MEASURING;EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_PESO_PORCION_COMPLETA:
@@ -427,7 +420,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
-              BTSerial.write("ESTADO_EMBED_CLOSED_MEASURING;EVENTO_PESO_PORCION_COMPLETA");
+              BTSerial.write(EVENTO_PESO_PORCION_COMPLETA);
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -436,7 +429,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_INSUFICIENTE;
-              BTSerial.write("ESTADO_EMBED_CLOSED_MEASURING;EVENTO_PESO_PORCION_INSUFICIENTE");
+              BTSerial.write(EVENTO_PESO_PORCION_INSUFICIENTE);
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -444,13 +437,12 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
               manejar_led();
               estado = ESTADO_EMBED_OPEN_SERVING;
-              BTSerial.write("ESTADO_EMBED_CLOSED_MEASURING;EVENTO_PESO_PORCION_FALTA");
+              BTSerial.write(EVENTO_PESO_PORCION_FALTA);
               break;
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_CLOSED_MEASURING;EVENTO_DESCONOCIDO");
               break;              
             }
         }
@@ -466,7 +458,6 @@ void maquina_estado() {
               servo_puerta.servo.write(SERVO_OPEN_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
               // manejar_led();
-              BTSerial.write("ESTADO_EMBED_SERVING;EVENTO_CONTINUE");
               break;   
             }
           case EVENTO_PORCION_SERVIDA:
@@ -476,13 +467,12 @@ void maquina_estado() {
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_IDLE;              
-              BTSerial.write("ESTADO_EMBED_SERVING;EVENTO_PORCION_SERVIDA");
+              BTSerial.write(EVENTO_PORCION_SERVIDA);
               break;   
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_SERVING", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_SERVING;EVENTO_DESCONOCIDO");
               break;              
             }
         }
@@ -495,13 +485,11 @@ void maquina_estado() {
             {
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "EVENTO_CONTINUE");
               manejar_led();
-              BTSerial.write("ESTADO_EMBED_INSUFICIENTE;EVENTO_CONTINUE");
               break;   
             }
           default:
             {
               DebugPrintEstado("ESTADO_EMBED_INSUFICIENTE", "Evento desconocido");
-              BTSerial.write("ESTADO_EMBED_INSUFICIENTE;EVENTO_DESCONOCIDO");
               break;              
             } 
         }
@@ -510,7 +498,6 @@ void maquina_estado() {
     default:
       {
         DebugPrintEstado("ESTADO DESCONOCIDO", "");
-        BTSerial.write("ESTADO_DESCONOCIDO;EVENTO_DESCONOCIDO");
       }
   }
 }
