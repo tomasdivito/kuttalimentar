@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/drawable_fondo3.jpg.flat",
+        "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/drawable/fondo3.jpg"
+    },
+    {
         "merged": "com.example.kutallimentapp-merged_res-25:/layout_activity_main.xml.flat",
         "source": "com.example.kutallimentapp-main-27:/layout/activity_main.xml"
     },
@@ -14,6 +18,10 @@
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
         "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/drawable_fondo1.jpg.flat",
+        "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/drawable/fondo1.jpg"
     },
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
@@ -58,6 +66,10 @@
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-hdpi_ic_launcher.webp.flat",
         "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/drawable_fondo.jpg.flat",
+        "source": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-main-27:/drawable/fondo.jpg"
     },
     {
         "merged": "/Users/tomasdivito/.gradle/daemon/7.4/com.example.kutallimentapp-merged_res-25:/mipmap-xxhdpi_ic_launcher.webp.flat",

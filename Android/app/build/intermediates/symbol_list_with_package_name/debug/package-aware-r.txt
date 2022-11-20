@@ -2450,6 +2450,9 @@ drawable design_ic_visibility
 drawable design_ic_visibility_off
 drawable design_password_eye
 drawable design_snackbar_background
+drawable fondo
+drawable fondo1
+drawable fondo3
 drawable ic_clock_black_24dp
 drawable ic_keyboard_black_24dp
 drawable ic_launcher_background
@@ -2599,6 +2602,7 @@ id beginOnFirstDraw
 id beginning
 id bestChoice
 id blocking
+id botonConectar
 id botonServirComida
 id bottom
 id bounce
@@ -2721,6 +2725,8 @@ id ifRoom
 id ignore
 id ignoreRequest
 id image
+id imageView1
+id imageView2
 id immediateStop
 id included
 id info
@@ -2767,6 +2773,7 @@ id material_timepicker_mode_button
 id material_timepicker_ok_button
 id material_timepicker_view
 id material_value_index
+id mensajeApp
 id mensajeArduino
 id message
 id middle
@@ -2940,7 +2947,6 @@ id textSpacerNoTitle
 id textStart
 id textTop
 id textView
-id textView3
 id text_input_end_icon
 id text_input_error_icon
 id text_input_start_icon
