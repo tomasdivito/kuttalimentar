@@ -4,12 +4,13 @@ public interface ContractMain {
 
     interface MainView {
         void updateArduinoState(String string);
-        void onAppStateChange(String status);
+        void updateAppState(String status);
     }
 
     interface ArduinoModel {
         interface OnEventListener {
             void onEvent(String string);
+            void onBluetoothEvent(String string);
         }
 
         void openFood();

@@ -2670,6 +2670,7 @@ id disableIntraAutoTransition
 id disablePostScroll
 id disableScroll
 id disjoint
+id dogImage
 id dragAnticlockwise
 id dragClockwise
 id dragDown
@@ -2726,7 +2727,6 @@ id ignore
 id ignoreRequest
 id image
 id imageView1
-id imageView2
 id immediateStop
 id included
 id info

@@ -14,8 +14,8 @@ drawable ic_launcher_background
 drawable ic_launcher_foreground
 id botonConectar
 id botonServirComida
+id dogImage
 id imageView1
-id imageView2
 id login_button
 id mensajeApp
 id mensajeArduino

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements ContractMain.MainView {
     private TextView mensajeArduino;
     private TextView mensajeApp;
+    private ImageView dogImage;
     private Button botonServirComida;
     private Button botonConectar;
 
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         mensajeApp = findViewById(R.id.mensajeApp);
         botonServirComida = findViewById(R.id.botonServirComida);
         botonConectar = findViewById(R.id.botonConectar);
+        dogImage = findViewById(R.id.dogImage);
 
         // Instancio el sensor.
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -71,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             @Override
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float x = sensorEvent.values[0];
+                dogImage.setRotationX(x);
                 System.out.println("Valor de giro" + x);
                 //movemos hacia la derecha
                 if (x < -5 && whip == 0) {
@@ -93,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
             }
         });
-        //###########################################################################
 
         presenter = new PresenterMainActivity(this, new ArduinoModel(this), sensorModel);
 
@@ -222,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
     }
 
     @Override
-    public void onAppStateChange(String status) {
+    public void updateAppState(String status) {
         mensajeApp.setText(status);
     }
 

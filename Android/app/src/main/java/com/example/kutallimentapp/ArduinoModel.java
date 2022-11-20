@@ -43,11 +43,11 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 if (msg.what == MSG_BT) {
                     //voy concatenando el msj
                     String readMessage = (String) msg.obj;
-                    eventListener.onEvent(readMessage);
+                    eventListener.onBluetoothEvent(readMessage);
                 }
 
                 if (msg.what == MSG_CLOSE) {
-                    eventListener.onEvent("Desconectado");
+                    //eventListener.onEvent("Desconectado");
                 }
             }
         };

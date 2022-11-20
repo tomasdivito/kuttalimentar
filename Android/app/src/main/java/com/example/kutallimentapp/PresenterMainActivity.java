@@ -29,7 +29,14 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
 
     @Override
     public void onEvent(String string) {
-        if(view != null){
+        if (view != null){
+            view.updateAppState(string);
+        }
+    }
+
+    @Override
+    public void onBluetoothEvent(String string) {
+        if (view != null) {
             view.updateArduinoState(string);
         }
     }
