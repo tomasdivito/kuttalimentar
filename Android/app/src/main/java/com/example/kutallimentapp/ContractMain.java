@@ -5,12 +5,14 @@ public interface ContractMain {
     interface MainView {
         void updateArduinoState(String string);
         void updateAppState(String status);
+        void updateWeightState(String weight);
     }
 
     interface ArduinoModel {
         interface OnEventListener {
             void onEvent(String string);
             void onBluetoothEvent(String string);
+            void onWeightEvent(String weight);
         }
 
         void openFood();
@@ -19,7 +21,7 @@ public interface ContractMain {
     }
 
     interface PresenterMainActivity {
-        void onButtonClick();
+        void serveFood();
         void onDestroy();
         void connectBluetooth();
 

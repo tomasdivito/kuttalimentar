@@ -32,6 +32,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements ContractMain.MainView {
     private TextView mensajeArduino;
     private TextView mensajeApp;
+    private TextView sensorPeso;
     private ImageView dogImage;
     private Button botonServirComida;
     private Button botonConectar;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
         mensajeArduino = findViewById(R.id.mensajeArduino);
         mensajeApp = findViewById(R.id.mensajeApp);
+        sensorPeso = findViewById(R.id.sensorPeso);
         botonServirComida = findViewById(R.id.botonServirComida);
         botonConectar = findViewById(R.id.botonConectar);
         dogImage = findViewById(R.id.dogImage);
@@ -75,17 +77,17 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
             public void onSensorChanged(SensorEvent sensorEvent) {
                 float x = sensorEvent.values[0];
                 float y = sensorEvent.values[1];
-                dogImage.setRotationX(x);
-                dogImage.setRotationY(y);
+                dogImage.setRotationX(x * 2);
+                dogImage.setRotationY(y * 2);
                 System.out.println("Valor de giro" + x);
                 //movemos hacia la derecha
                 if (x < -5 && whip == 0) {
-                    //getWindow().getDecorView().setBackgroundColor(Color.RED);
+                    getWindow().getDecorView().setBackgroundColor(Color.BLACK);
                     whip++;
                 }
                 //movemos hacia la izquierda
                 else if (x > 5 && whip == 1) {
-                    //getWindow().getDecorView().setBackgroundColor(Color.BLUE);
+                    getWindow().getDecorView().setBackgroundColor(Color.GRAY);
                     whip++;
                 }
 
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
             @Override
             public void onAccuracyChanged(Sensor sensor, int i) {
-
+                // No-op
             }
         });
 
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         botonServirComida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.onButtonClick();
+                presenter.serveFood();
             }
         });
 
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
         switch (requestCode) {
             case MULTIPLE_PERMISSIONS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //enableComponent(); // Now you call here what ever you want :)
+                    enableComponent(); // Now you call here what ever you want :)
                 } else if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "ATENCION: Tenes que darle permisos de bluetooth!", Toast.LENGTH_LONG).show();
                 }
@@ -170,49 +172,6 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
 
     public void enableComponent() {
         presenter.connectBluetooth();
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        if (sensor == null) {
-            finish();
-        }
-
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float x = sensorEvent.values[0];
-                //System.out.println("Valor de giro" + x);
-                //movemos hacia la derecha
-                if (x < -5 && whip == 0) {
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
-                    whip++;
-                }
-                //movemos hacia la izquierda
-                else if (x > 5 && whip == 1) {
-                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-                    whip++;
-                }
-
-                if (whip == 2) {
-                    whip = 0;
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-
-            }
-        };
-        start();
-    }
-
-    private void start() {
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void stop() {
-        sensorManager.unregisterListener(sensorEventListener);
     }
 
     @Override
@@ -232,9 +191,13 @@ public class MainActivity extends AppCompatActivity implements ContractMain.Main
     }
 
     @Override
+    public void updateWeightState(String weight) {
+        sensorPeso.setText("Peso de la porcion actual: " + weight);
+    }
+
+    @Override
     protected void onPause() {
         presenter.pause();
-        stop(); // Stop sensor listeners
         super.onPause();
     }
 }

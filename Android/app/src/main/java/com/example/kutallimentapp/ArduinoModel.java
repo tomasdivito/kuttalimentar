@@ -43,11 +43,36 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 if (msg.what == MSG_BT) {
                     //voy concatenando el msj
                     String readMessage = (String) msg.obj;
-                    eventListener.onBluetoothEvent(readMessage);
+                    String bluetoothEvent = "";
+                    switch (readMessage) {
+                        case "A":
+                            bluetoothEvent = "Sirviendo comida...";
+                            break;
+                        case "I":
+                            bluetoothEvent = "Cargando porcion...";
+                            break;
+                        case "S":
+                            bluetoothEvent = "Porción servida";
+                            break;
+                        case "C":
+                            bluetoothEvent = "Porción lista para servir";
+                            break;
+                        case "F":
+                            bluetoothEvent = "Falta comida en el alimentador!";
+                            break;
+                        default:
+                            bluetoothEvent = "";
+                            break;
+                    }
+                    if (bluetoothEvent.equals("")) {
+                        eventListener.onWeightEvent(readMessage);
+                    } else {
+                        eventListener.onBluetoothEvent(bluetoothEvent);
+                    }
                 }
 
                 if (msg.what == MSG_CLOSE) {
-                    //eventListener.onEvent("Desconectado");
+                    //eventListener.onEvent("DESCONECTADO");
                 }
             }
         };
@@ -88,12 +113,12 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 }
             }
         } else {
-            eventListener.onEvent("No devices found");
+            eventListener.onEvent("CONECTATE AL BLUETOOTH Y AL HC05");
             return;
         }
 
         if (hc05 != null) {
-            eventListener.onEvent("Alimentador encontrado");
+            eventListener.onEvent("Conectado al alimentador");
             try {
                 arduinoSocket = hc05.createInsecureRfcommSocketToServiceRecord(BTMODULEUUID);
 
@@ -115,6 +140,7 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 e.printStackTrace();
             }
         } else {
+            eventListener.onEvent("CONECTATE AL HC05");
             Log.d("", "Alimentador no encontrado :(");
         }
     }

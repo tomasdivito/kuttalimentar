@@ -13,7 +13,7 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
     }
 
     @Override
-    public void onButtonClick() {
+    public void serveFood() {
         model.openFood();
     }
 
@@ -38,6 +38,13 @@ public class PresenterMainActivity implements ContractMain.PresenterMainActivity
     public void onBluetoothEvent(String string) {
         if (view != null) {
             view.updateArduinoState(string);
+        }
+    }
+
+    @Override
+    public void onWeightEvent(String weight) {
+        if (view != null) {
+            view.updateWeightState(weight);
         }
     }
 

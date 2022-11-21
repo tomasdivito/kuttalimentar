@@ -1,3 +1,4 @@
+#include <Arduino.h>
 /// Habilitacion de debug para la impresion por el puerto serial
 #define SERIAL_DEBUG_ENABLED 1
 
@@ -71,7 +72,7 @@
 #define PIN_DISTANCIA A1
 
 #define SERVO_OPEN_POSITION 0
-#define SERVO_CLOSED_POSITION 180
+#define SERVO_CLOSED_POSITION 130
 
 /// UMBRALES
 #define UMBRAL_TIMEOUT 1000 // Para correr una vez por segundo
@@ -356,6 +357,7 @@ void maquina_estado() {
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
               estado = ESTADO_EMBED_SERVING;
+              BTSerial.write("A");
               break;
             }
           default:
@@ -410,7 +412,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
-              BTSerial.write("****** PORCION COMPLETA****** \n\n");
+              BTSerial.write("C");
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -425,6 +427,7 @@ void maquina_estado() {
             {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
               manejar_led();
+              BTSerial.write("I");
               estado = ESTADO_EMBED_OPEN_SERVING;
               break;
             }
@@ -445,7 +448,6 @@ void maquina_estado() {
               manejar_led();
               servo_puerta.servo.write(SERVO_OPEN_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_ABIERTO;
-              // manejar_led();
               break;   
             }
           case EVENTO_PORCION_SERVIDA:
@@ -454,6 +456,7 @@ void maquina_estado() {
               manejar_led();
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
+              BTSerial.write("S");
               estado = ESTADO_EMBED_IDLE;              
               break;   
             }
