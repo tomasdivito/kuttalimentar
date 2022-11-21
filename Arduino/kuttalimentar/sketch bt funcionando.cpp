@@ -318,7 +318,7 @@ void maquina_estado() {
         switch (evento) {
           case EVENTO_CONTINUE:
             {
-              DebugPrintEstado("ESTADO_EMBED_INIT", "ESTADO CONTINUE");
+              DebugPrintEstado("ESTADO_EMBED_INIT", "EVENTO_CONTINUE");
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_porcion.servo.write(SERVO_CLOSED_POSITION);
               estado = ESTADO_EMBED_IDLE;

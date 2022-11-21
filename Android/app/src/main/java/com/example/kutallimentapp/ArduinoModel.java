@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,7 +24,6 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     private static final int MSG_BT = 4;
-    private static final int MSG_CLOSE = 5;
 
     private Handler handler;
     private Context context;
@@ -69,10 +69,6 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                     } else {
                         eventListener.onBluetoothEvent(bluetoothEvent);
                     }
-                }
-
-                if (msg.what == MSG_CLOSE) {
-                    //eventListener.onEvent("DESCONECTADO");
                 }
             }
         };
@@ -179,16 +175,17 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                     bytes = inputStream.read(buffer);
                     String readMessage = new String(buffer, 0, bytes);
 
-                    Message msg = Message.obtain();
-                    msg.what = 4;
-                    msg.obj = readMessage;
-                    handler.sendMessage(msg);
-                } catch (IOException e) {
+                    Scanner scanner = new Scanner(readMessage).useDelimiter("--");
 
-                    // Send close message to the handler
-                    Message msg = Message.obtain();
-                    msg.what = MSG_CLOSE;
-                    handler.sendMessage(msg);
+                    while (scanner.hasNext()) {
+                        String parsedMessage = scanner.next();
+
+                        Message msg = Message.obtain();
+                        msg.what = 4;
+                        msg.obj = parsedMessage;
+                        handler.sendMessage(msg);
+                    }
+                } catch (IOException e) {
 
                     e.printStackTrace();
                     break;
@@ -202,11 +199,6 @@ public class ArduinoModel implements ContractMain.ArduinoModel {
                 outputStream.write(buffer);
             } catch (IOException e) {
                 running = false;
-
-                // Send close message to the handler
-                Message msg = Message.obtain();
-                msg.what = MSG_CLOSE;
-                handler.sendMessage(msg);
 
                 e.printStackTrace();
             }

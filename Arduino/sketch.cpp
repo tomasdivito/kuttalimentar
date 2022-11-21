@@ -178,9 +178,11 @@ bool detectar_eventos_flex(int lectura_millis) {
     return false;
   }
 
-  char buf[16];
-  ltoa(sensor_flex.valor_actual, buf, 10);
-  BTSerial.write(buf);
+  char msg_buf[10];
+  
+  sprintf(msg_buf, "%ld--", sensor_flex.valor_actual);
+
+  BTSerial.write(msg_buf);
 
   if (sensor_flex.valor_actual < UMBRAL_PESO_PORCION_CUSTOM) {
     sensor_flex.estado = ESTADO_FLEX_PORCION_FALTANTE;
@@ -378,7 +380,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_IDLE", "EVENTO_PRESENCIA_DETECTADA");
               led.estado = ESTADO_LED_FAST_BLINK_PRENDIDO;
               manejar_led();
-              BTSerial.write("A");
+              BTSerial.write("A--");
               estado = ESTADO_EMBED_SERVING;
               break;
             }
@@ -434,7 +436,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_PRENDIDO;
               estado = ESTADO_EMBED_IDLE;
-              BTSerial.write("C");
+              BTSerial.write("C--");
               break;
             }
           case EVENTO_PESO_PORCION_INSUFICIENTE:
@@ -443,7 +445,7 @@ void maquina_estado() {
               manejar_led();
               led.estado = ESTADO_LED_SLOW_BLINK_PRENDIDO;
               estado = ESTADO_EMBED_INSUFICIENTE;
-              BTSerial.write("F");
+              BTSerial.write("F--");
               break;
             }
           case EVENTO_PESO_PORCION_FALTA:
@@ -451,7 +453,7 @@ void maquina_estado() {
               DebugPrintEstado("ESTADO_EMBED_CLOSED_MEASURING", "EVENTO_PESO_PORCION_FALTA");
               manejar_led();
               estado = ESTADO_EMBED_OPEN_SERVING;
-              BTSerial.write("I");
+              BTSerial.write("I--");
               break;
             }
           default:
@@ -481,7 +483,7 @@ void maquina_estado() {
               servo_puerta.servo.write(SERVO_CLOSED_POSITION);
               servo_puerta.estado_servo = ESTADO_SERVO_CERRADO;
               estado = ESTADO_EMBED_IDLE;              
-              BTSerial.write("S");
+              BTSerial.write("S--");
               break;   
             }
           default:
